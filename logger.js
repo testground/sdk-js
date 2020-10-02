@@ -1,4 +1,3 @@
-const { __esModule } = require('ioredis/built/redis')
 const winston = require('winston')
 
 const logger = winston.createLogger({

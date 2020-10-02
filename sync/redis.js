@@ -1,10 +1,9 @@
 const Redis = require('ioredis')
-const logger = require('../logger')
 
 const ENV_REDIS_HOST = 'REDIS_HOST'
 const ENV_REDIS_PORT = 'REDIS_PORT'
 
-async function redisClient () {
+async function redisClient (logger) {
   let port = 6379
   const host = process.env[ENV_REDIS_HOST]
 

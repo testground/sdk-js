@@ -18,7 +18,7 @@ const testcases = {
 // TODO
 async function pingpong (runenv) {
   runenv.recordMessage('before sync.MustBoundClient')
-  const client = sync.newBoundClient(runenv)
+  const client = await sync.newBoundClient(runenv)
 
   if (!runenv.testSidecar) {
     return
