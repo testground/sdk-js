@@ -1,0 +1,15 @@
+export TEST_BRANCH=
+export TEST_CASE=pingpong
+export TEST_GROUP_ID=
+export TEST_GROUP_INSTANCE_COUNT=
+export TEST_INSTANCE_COUNT=
+export TEST_INSTANCE_PARAMS=
+export TEST_INSTANCE_ROLE=
+export TEST_OUTPUTS_PATH=
+export TEST_PLAN=
+export TEST_REPO=
+export TEST_RUN=
+export TEST_SIDECAR=
+export TEST_START_TIME=
+export TEST_SUBNET=127.0.0.1/24
+export TEST_TAG=

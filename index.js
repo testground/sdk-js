@@ -1,8 +1,7 @@
-/* const HTTP_PORT = 6060
-const HTTP_PORT_FALLBACK = 0 */
+const runtime = require('./runtime')
 
 async function invokeMap (cases) {
-  const runenv = {} // TODO: get current environemnt
+  const runenv = runtime.currentRunEnv()
 
   if (cases[runenv.testCase]) {
     await invokeHelper(runenv, cases[runenv.testCase])

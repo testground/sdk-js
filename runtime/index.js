@@ -16,38 +16,23 @@ const ENV_TEST_START_TIME = 'TEST_START_TIME'
 const ENV_TEST_SUBNET = 'TEST_SUBNET'
 const ENV_TEST_TAG = 'TEST_TAG'
 
-function parseKeyValues (env) {
-  const res = {}
-
-  for (const d of env) {
-    const splt = d.split('=')
-    if (splt.length < 2) {
-      throw new Error(`invalid key-value: ${d}`)
-    }
-    res[splt[0]] = splt.slice(1)
-  }
-
-  return res
-}
-
 function parseRunParams (env) {
-  const m = parseKeyValues(env)
   return {
-    TestBranch: m[ENV_TEST_BRANCH],
-    TestCase: m[ENV_TEST_CASE],
-    TestGroupID: m[ENV_TEST_GROUP_ID],
-    TestGroupInstanceCount: Number.parseInt(m[ENV_TEST_GROUP_INSTANCE_COUNT]),
-    TestInstanceCount: Number.parseInt(m[ENV_TEST_INSTANCE_COUNT]),
-    TestInstanceParams: unpackParams(m[ENV_TEST_INSTANCE_PARAMS]),
-    TestInstanceRole: m[ENV_TEST_INSTANCE_ROLE],
-    TestOutputsPath: m[ENV_TEST_OUTPUTS_PATH],
-    TestPlan: m[ENV_TEST_PLAN],
-    TestRepo: m[ENV_TEST_REPO],
-    TestRun: m[ENV_TEST_RUN],
-    TestSidecar: m[ENV_TEST_SIDECAR] === 'true',
-    TestStartTime: Date.parse(ENV_TEST_START_TIME),
-    TestSubnet: ip.cidrSubnet(m[ENV_TEST_SUBNET]),
-    TestTag: m[ENV_TEST_TAG]
+    testBranch: env[ENV_TEST_BRANCH],
+    testCase: env[ENV_TEST_CASE],
+    testGroupID: env[ENV_TEST_GROUP_ID],
+    testGroupInstanceCount: Number.parseInt(env[ENV_TEST_GROUP_INSTANCE_COUNT]),
+    testInstanceCount: Number.parseInt(env[ENV_TEST_INSTANCE_COUNT]),
+    testInstanceParams: unpackParams(env[ENV_TEST_INSTANCE_PARAMS]),
+    testInstanceRole: env[ENV_TEST_INSTANCE_ROLE],
+    testOutputsPath: env[ENV_TEST_OUTPUTS_PATH],
+    testPlan: env[ENV_TEST_PLAN],
+    testRepo: env[ENV_TEST_REPO],
+    testRun: env[ENV_TEST_RUN],
+    testSidecar: env[ENV_TEST_SIDECAR] === 'true',
+    testStartTime: Date.parse(ENV_TEST_START_TIME),
+    testSubnet: ip.cidrSubnet(env[ENV_TEST_SUBNET]),
+    testTag: env[ENV_TEST_TAG]
   }
 }
 
@@ -78,6 +63,10 @@ function parseRunEnv (env) {
 class RunEnv {
   constructor (params) {
     this.runParams = params
+
+    for (const param in params) {
+      this[param] = params[param]
+    }
   }
 
   recordMessage () {
