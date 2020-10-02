@@ -57,41 +57,32 @@ function currentRunEnv () {
 
 function parseRunEnv (env) {
   const p = parseRunParams(env)
-  return new RunEnv(p)
+  return newRunEnv(p)
 }
 
-class RunEnv {
-  constructor (params) {
-    this.runParams = params
-
-    for (const param in params) {
-      this[param] = params[param]
+function newRunEnv (params) {
+  return {
+    ...params,
+    recordMessage: () => {
+      // TODO
+    },
+    recordStart: () => {
+      // TODO
+    },
+    recordSuccess: () => {
+      // TODO
+    },
+    recordFailure: () => {
+      // TODO
+    },
+    recordCrash: () => {
+      // TODO
     }
-  }
-
-  recordMessage () {
-    // TODO
-  }
-
-  recordStart () {
-    // TODO
-  }
-
-  recordSuccess () {
-    // TODO
-  }
-
-  recordFailure () {
-    // TODO
-  }
-
-  recordCrash () {
-    // TODO
   }
 }
 
 module.exports = {
-  RunEnv,
+  newRunEnv,
   currentRunEnv,
   parseRunEnv
 }

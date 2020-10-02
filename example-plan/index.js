@@ -4,7 +4,7 @@
 // this will be deleted.
 
 const os = require('os')
-const { invokeMap } = require('../')
+const { invokeMap, sync, network } = require('../')
 
 const testcases = {
   pingpong: pingpong
@@ -16,18 +16,15 @@ const testcases = {
 })()
 
 // TODO
-const sync = {}
-const network = {}
-
 async function pingpong (runenv) {
   runenv.recordMessage('before sync.MustBoundClient')
-  const client = await sync.mustBoundClient(runenv)
+  const client = sync.newBoundClient(runenv)
 
   if (!runenv.testSidecar) {
     return
   }
 
-  const netclient = await network.newClient(client, runenv)
+  const netclient = network.newClient(client, runenv)
   runenv.recordMessage('before netclient.MustWaitNetworkInitialized')
   await netclient.waitNetworkInitialized()
 

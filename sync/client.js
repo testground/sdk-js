@@ -30,3 +30,7 @@ async function redisClient () {
   logger.debug('redis ping OK', opts)
   return client
 }
+
+module.exports = {
+  redisClient
+}

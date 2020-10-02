@@ -1,4 +1,6 @@
 const runtime = require('./runtime')
+const sync = require('./sync')
+const network = require('./network')
 
 async function invokeMap (cases) {
   const runenv = runtime.currentRunEnv()
@@ -11,7 +13,7 @@ async function invokeMap (cases) {
 }
 
 async function invoke (fn) {
-  const runenv = {} // TODO: get current environemnt
+  const runenv = runtime.currentRunEnv()
   await invokeHelper(runenv, fn)
 }
 
@@ -22,5 +24,9 @@ async function invokeHelper (runenv, fn) {
 
 module.exports = {
   invoke,
-  invokeMap
+  invokeMap,
+
+  network,
+  runtime,
+  sync
 }
