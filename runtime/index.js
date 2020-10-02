@@ -66,39 +66,43 @@ function unpackParams (packed) {
   return params
 }
 
+function currentRunEnv () {
+  return parseRunEnv(process.env)
+}
+
+function parseRunEnv (env) {
+  const p = parseRunParams(env)
+  return new RunEnv(p)
+}
+
 class RunEnv {
   constructor (params) {
     this.runParams = params
   }
 
-  static currentRunEnv () {
-    return RunEnv.parseRunEnv(process.env)
-  }
-
-  static parseRunEnv (env) {
-    const p = parseRunParams(env)
-    return new RunEnv(p)
-  }
-
   recordMessage () {
-
+    // TODO
   }
 
   recordStart () {
-
+    // TODO
   }
 
   recordSuccess () {
-
+    // TODO
   }
 
   recordFailure () {
-
+    // TODO
   }
 
   recordCrash () {
-
+    // TODO
   }
 }
 
-module.exports = RunEnv
+module.exports = {
+  RunEnv,
+  currentRunEnv,
+  parseRunEnv
+}

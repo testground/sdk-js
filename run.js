@@ -1,5 +1,5 @@
-const HTTP_PORT = 6060
-const HTTP_PORT_FALLBACK = 0
+/* const HTTP_PORT = 6060
+const HTTP_PORT_FALLBACK = 0 */
 
 async function invokeMap (cases) {
   const runenv = {} // TODO: get current environemnt
