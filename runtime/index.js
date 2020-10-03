@@ -1,5 +1,4 @@
-const winston = require('winston')
-
+const { getLogger } = require('./logger')
 const { newEvents } = require('./events')
 const { parseRunParams } = require('./params')
 
@@ -13,27 +12,9 @@ function parseRunEnv (env) {
 }
 
 function newRunEnv (params) {
-  const format = winston.format.combine(
-    winston.format((info, opts = {}) => {
-      info.ts = Date.now() * 1000000 // timestamp with nanoseconds, doesn't have precision,
-      info.group_id = params.testGroupId
-      info.run_id = params.testRun
-      return info
-    })(),
-    winston.format.json()
-  )
-
   const options = {
     runParams: params,
-    logger: winston.createLogger({
-      level: 'debug',
-      format,
-      transports: [
-        new winston.transports.Console({
-          format
-        })
-      ]
-    })
+    logger: getLogger(params)
   }
 
   return {
