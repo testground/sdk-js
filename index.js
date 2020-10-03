@@ -19,7 +19,13 @@ async function invoke (fn) {
 
 async function invokeHelper (runenv, fn) {
   // TODO: the rest of the checks
-  await fn(runenv)
+
+  try {
+    await fn(runenv)
+    runenv.recordSuccess()
+  } catch (err) {
+    runenv.recordFailure(err)
+  }
 }
 
 module.exports = {
