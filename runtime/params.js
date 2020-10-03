@@ -20,7 +20,7 @@ function parseRunParams (env) {
   const params = {
     testBranch: env[ENV_TEST_BRANCH],
     testCase: env[ENV_TEST_CASE],
-    testGroupID: env[ENV_TEST_GROUP_ID],
+    testGroupId: env[ENV_TEST_GROUP_ID],
     testGroupInstanceCount: Number.parseInt(env[ENV_TEST_GROUP_INSTANCE_COUNT]),
     testInstanceCount: Number.parseInt(env[ENV_TEST_INSTANCE_COUNT]),
     testInstanceParams: unpackParams(env[ENV_TEST_INSTANCE_PARAMS]),
@@ -43,7 +43,7 @@ function parseRunParams (env) {
       instances: params.testInstanceCount,
       outputs_path: params.testOutputsPath,
       network: params.testSubnet.toString(),
-      group: params.testGroupID,
+      group: params.testGroupId,
       group_instances: params.testGroupInstanceCount
     }
 
