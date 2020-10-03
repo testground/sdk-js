@@ -1,4 +1,4 @@
-const ip = require('ip')
+const ipaddr = require('ipaddr.js')
 
 const ENV_TEST_BRANCH = 'TEST_BRANCH'
 const ENV_TEST_CASE = 'TEST_CASE'
@@ -31,7 +31,7 @@ function parseRunParams (env) {
     testRun: env[ENV_TEST_RUN],
     testSidecar: env[ENV_TEST_SIDECAR] === 'true',
     testStartTime: Date.parse(ENV_TEST_START_TIME),
-    testSubnet: ip.cidrSubnet(env[ENV_TEST_SUBNET]),
+    testSubnet: ipaddr.parseCIDR(env[ENV_TEST_SUBNET]),
     testTag: env[ENV_TEST_TAG]
   }
 
@@ -42,7 +42,7 @@ function parseRunParams (env) {
       run: params.testRun,
       instances: params.testInstanceCount,
       outputs_path: params.testOutputsPath,
-      network: params.testSubnet.toString(), // TODO: check for correct method
+      network: params.testSubnet.toString(),
       group: params.testGroupID,
       group_instances: params.testGroupInstanceCount
     }

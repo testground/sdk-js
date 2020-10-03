@@ -1,5 +1,5 @@
 {
-  "name": "sdk-js",
+  "name": "testground-sdk",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "ioredis": "^4.17.3",
-    "ip": "^1.1.5",
+    "ipaddr.js": "^2.0.0",
     "winston": "^3.3.3"
   }
 }

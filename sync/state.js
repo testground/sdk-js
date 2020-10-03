@@ -20,7 +20,7 @@ function barrier ({ logger, extractor, redis }) {
       }
     }
 
-    const params = extractor()
+    const params = await extractor()
     if (!params) {
       throw new Error('no run parameters provided')
     }
