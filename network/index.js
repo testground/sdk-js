@@ -67,7 +67,9 @@ function getDataNetworkIP ({ client, runenv }) {
   }
 }
 
-function newClient (options) {
+function newClient (client, runenv) {
+  const options = { client, runenv }
+
   return {
     waitNetworkInitialized: waitNetworkInitialized(options),
     configureNetwork: configureNetwork(options),
