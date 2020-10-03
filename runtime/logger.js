@@ -1,4 +1,3 @@
-const { process } = require('ipaddr.js')
 const winston = require('winston')
 
 function getLogger (params) {
