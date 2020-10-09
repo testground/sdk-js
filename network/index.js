@@ -19,22 +19,22 @@ function waitNetworkInitialized ({ client, runenv }) {
 
 function configureNetwork ({ client, runenv }) {
   return async (config) => {
-    if (!runenv.testSidecar) {
+    if (!runenv.TestSidecar) {
       runenv.logger.warn('ignoring network change request; running in a sidecar-less environment')
       return
     }
 
-    if (!config.callbackState) {
+    if (!config.State) {
       throw new Error('failed to configure network; no callback state provided')
     }
 
     const hostname = os.hostname()
     const topic = `network:${hostname}`
-    const target = config.callbackTarget === 0
-      ? config.testInstanceCount // Fall back to instance count on zero value.
-      : config.callbackTarget
+    const target = config.CallbackTarget === 0
+      ? config.TestInstanceCount // Fall back to instance count on zero value.
+      : config.CallbackTarget
 
-    await client.publishAndWait(topic, config, config.callbackState, target)
+    await client.publishAndWait(topic, config, config.State, target)
   }
 }
 
