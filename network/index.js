@@ -19,23 +19,44 @@ function waitNetworkInitialized ({ client, runenv }) {
 
 function configureNetwork ({ client, runenv }) {
   return async (config) => {
-    if (!runenv.TestSidecar) {
+    if (!runenv.testSidecar) {
       runenv.logger.warn('ignoring network change request; running in a sidecar-less environment')
       return
     }
 
-    if (!config.State) {
+    if (!config.callbackState) {
       throw new Error('failed to configure network; no callback state provided')
     }
 
     const hostname = os.hostname()
     const topic = `network:${hostname}`
-    const target = config.CallbackTarget === 0
-      ? config.TestInstanceCount // Fall back to instance count on zero value.
-      : config.CallbackTarget
+    const target = config.callbackTarget === 0
+      ? config.testInstanceCount // Fall back to instance count on zero value.
+      : config.callbackTarget
 
-    await client.publishAndWait(topic, config, config.State, target)
+    await client.publishAndWait(topic, fixConfig(config), config.callbackState, target)
   }
+}
+
+// fixConfig converts the configuration from the JavaScript lowerCamelCase version to the
+// Go CammelCase version. More about this is mentioned at https://github.com/testground/sdk-go/pull/34
+function fixConfig (config) {
+  if (typeof config !== 'object') {
+    return config
+  }
+
+  if (Array.isArray(config)) {
+    return config.map(fixConfig)
+  }
+
+  const parsed = {}
+
+  for (let [key, value] of Object.entries(config)) {
+    if (key === 'callbackState') key = 'State'
+    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = value
+  }
+
+  return parsed
 }
 
 function getDataNetworkIP ({ client, runenv }) {
