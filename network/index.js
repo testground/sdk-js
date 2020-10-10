@@ -30,7 +30,7 @@ function configureNetwork ({ client, runenv }) {
 
     const hostname = os.hostname()
     const topic = `network:${hostname}`
-    const target = config.callbackTarget === 0
+    const target = (!config.callbackTarget || config.callbackTarget === 0)
       ? runenv.testInstanceCount // Fall back to instance count on zero value.
       : config.callbackTarget
 
