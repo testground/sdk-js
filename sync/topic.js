@@ -11,7 +11,7 @@ function publish ({ logger, extractor, redis }) {
       throw new Error('no run parameters provided')
     }
 
-    logger.debug('publishig item on topic', { topic, payload })
+    logger.debug('publishing item on topic', { topic, payload })
 
     const json = JSON.stringify(payload)
     logger.debug('serialized json payload', { topic, json })
