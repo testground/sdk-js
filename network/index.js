@@ -46,7 +46,7 @@ function normalizeConfig (config) {
   }
 
   if (Array.isArray(config)) {
-    return config.map(fixConfig)
+    return config.map(normalizeConfig)
   }
 
   const parsed = {}
@@ -54,7 +54,7 @@ function normalizeConfig (config) {
   for (let [key, value] of Object.entries(config)) {
     if (key === 'callbackState') key = 'State'
     if (key === 'ip') key = 'IP'
-    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = fixConfig(value)
+    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = normalizeConfig(value)
   }
 
   return parsed
