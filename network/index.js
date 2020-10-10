@@ -31,7 +31,7 @@ function configureNetwork ({ client, runenv }) {
     const hostname = os.hostname()
     const topic = `network:${hostname}`
     const target = config.callbackTarget === 0
-      ? config.testInstanceCount // Fall back to instance count on zero value.
+      ? runenv.testInstanceCount // Fall back to instance count on zero value.
       : config.callbackTarget
 
     await client.publishAndWait(topic, fixConfig(config), config.callbackState, target)
