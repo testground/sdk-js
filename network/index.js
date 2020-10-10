@@ -30,17 +30,17 @@ function configureNetwork ({ client, runenv }) {
 
     const hostname = os.hostname()
     const topic = `network:${hostname}`
-    const target = config.callbackTarget === 0
-      ? config.testInstanceCount // Fall back to instance count on zero value.
+    const target = (!config.callbackTarget || config.callbackTarget === 0)
+      ? runenv.testInstanceCount // Fall back to instance count on zero value.
       : config.callbackTarget
 
-    await client.publishAndWait(topic, fixConfig(config), config.callbackState, target)
+    await client.publishAndWait(topic, normalizeConfig(config), config.callbackState, target)
   }
 }
 
-// fixConfig converts the configuration from the JavaScript lowerCamelCase version to the
+// normalizeConfig converts the configuration from the JavaScript lowerCamelCase version to the
 // Go CammelCase version. More about this is mentioned at https://github.com/testground/sdk-go/pull/34
-function fixConfig (config) {
+function normalizeConfig (config) {
   if (typeof config !== 'object') {
     return config
   }
@@ -53,6 +53,7 @@ function fixConfig (config) {
 
   for (let [key, value] of Object.entries(config)) {
     if (key === 'callbackState') key = 'State'
+    if (key === 'ip') key = 'IP'
     parsed[key.charAt(0).toUpperCase() + key.slice(1)] = fixConfig(value)
   }
 
