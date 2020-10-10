@@ -53,7 +53,7 @@ function fixConfig (config) {
 
   for (let [key, value] of Object.entries(config)) {
     if (key === 'callbackState') key = 'State'
-    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = value
+    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = fixConfig(value)
   }
 
   return parsed
