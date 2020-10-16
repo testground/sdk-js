@@ -12,15 +12,19 @@ function parseRunEnv (env) {
 }
 
 function newRunEnv (params) {
+  let signalEmitter = null
+
   const options = {
     runParams: params,
-    logger: getLogger(params)
+    logger: getLogger(params),
+    getSignalEmitter: () => signalEmitter
   }
 
   return {
     ...params,
     ...options,
-    ...newEvents(options)
+    ...newEvents(options),
+    setSignalEmitter: (e) => { signalEmitter = e }
   }
 }
 

@@ -1,58 +1,72 @@
-const EVENT_TYPE_START = 'start'
-const EVENT_TYPE_MESSAGE = 'message'
-const EVENT_TYPE_FINISH = 'finish'
+function newEvents ({ logger, runParams, getSignalEmitter }) {
+  const emitEvent = async (event) => {
+    const signalEmitter = getSignalEmitter()
 
-const EVENT_OUTCOME_OK = 'ok'
-const EVENT_OUTCOME_FAILED = 'failed'
-const EVENT_OUTCOME_CRASHED = 'crashed'
+    if (!signalEmitter) {
+      return
+    }
 
-function newEvents ({ logger, runParams }) {
+    try {
+      await signalEmitter.signalEvent(event)
+    } catch (_) {}
+  }
+
   return {
     recordMessage: (msg) => {
       const event = {
-        type: EVENT_TYPE_MESSAGE,
-        message: msg
+        message_event: {
+          message: msg
+        }
       }
 
       logger.info('', { event })
+      emitEvent(event)
     },
     recordStart: () => {
       const event = {
-        type: EVENT_TYPE_START,
-        runenv: runParams
+        start_event: {
+          runenv: runParams
+        }
       }
 
       logger.info('', { event })
+      emitEvent(event)
       // TODO: re.metrics.recordEvent(&evt)
     },
     recordSuccess: () => {
       const event = {
-        type: EVENT_TYPE_FINISH,
-        outcome: EVENT_OUTCOME_OK
+        success_event: {
+          group: runParams.testGroupID
+        }
       }
 
       logger.info('', { event })
+      emitEvent(event)
       // TODO: re.metrics.recordEvent(&evt)
     },
     recordFailure: (err) => {
       const event = {
-        type: EVENT_TYPE_FINISH,
-        outcome: EVENT_OUTCOME_FAILED,
-        error: err.toString()
+        failure_event: {
+          group: runParams.testGroupID,
+          error: err.toString()
+        }
       }
 
       logger.info('', { event })
+      emitEvent(event)
       // TODO: re.metrics.recordEvent(&evt)
     },
     recordCrash: (err) => {
       const event = {
-        type: EVENT_TYPE_FINISH,
-        outcome: EVENT_OUTCOME_CRASHED,
-        error: err.toString(),
-        stacktrace: err.stack
+        crash_event: {
+          group: runParams.testGroupID,
+          error: err.toString(),
+          stacktrace: err.stack
+        }
       }
 
       logger.info('', { event })
+      emitEvent(event)
       // TODO: re.metrics.recordEvent(&evt)
     }
   }
