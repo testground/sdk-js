@@ -51,10 +51,12 @@ function normalizeConfig (config) {
 
   const parsed = {}
 
-  for (let [key, value] of Object.entries(config)) {
-    if (key === 'callbackState') key = 'State'
-    if (key === 'ip') key = 'IP'
-    parsed[key.charAt(0).toUpperCase() + key.slice(1)] = normalizeConfig(value)
+  for (const [key, value] of Object.entries(config)) {
+    const newKey = key === 'IPv4' || key === 'IPv6'
+      ? key
+      : key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) // to_snake_case
+
+    parsed[newKey] = normalizeConfig(value)
   }
 
   return parsed
