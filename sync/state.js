@@ -1,3 +1,5 @@
+const { REDIS_PAYLOAD_KEY } = require('./redis')
+
 function sleep (ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
@@ -6,6 +8,10 @@ function sleep (ms) {
 
 function stateKey (state, params) {
   return `run:${params.testRun}:plan:${params.testPlan}:case:${params.testCase}:states:${state}`
+}
+
+function eventsKey (params) {
+  return `run:${params.testRun}:plan:${params.testPlan}:case:${params.testCase}:run_events`
 }
 
 function barrier ({ logger, extractor, redis }) {
@@ -73,9 +79,26 @@ function signalEntry ({ logger, extractor, redis }) {
   }
 }
 
+function signalEvent ({ logger, extractor, redis }) {
+  return async (event) => {
+    const params = await extractor()
+    if (!params) {
+      throw new Error('no run parameters provided')
+    }
+
+    const key = eventsKey(params)
+    logger.debug('signalling event', { key, value: event })
+
+    const json = JSON.stringify(event)
+    await redis.xadd(key, '*', REDIS_PAYLOAD_KEY, json)
+    logger.debug('successfully signalled event', { key })
+  }
+}
+
 module.exports = {
   createState: (options) => ({
     barrier: barrier(options),
-    signalEntry: signalEntry(options)
+    signalEntry: signalEntry(options),
+    signalEvent: signalEvent(options)
   })
 }

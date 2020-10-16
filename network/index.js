@@ -3,6 +3,15 @@ const ipaddr = require('ipaddr.js')
 
 function waitNetworkInitialized ({ client, runenv }) {
   return async () => {
+    const startEvent = {
+      stage_start_event: {
+        name: 'network-initialized',
+        group: runenv.testGroupID
+      }
+    }
+
+    await client.signalEvent(startEvent)
+
     if (runenv.testSidecar) {
       try {
         const barrier = await client.barrier('network-initialized', runenv.testInstanceCount)
@@ -12,6 +21,15 @@ function waitNetworkInitialized ({ client, runenv }) {
         throw err
       }
     }
+
+    const endEvent = {
+      stage_end_event: {
+        name: 'network-initialized',
+        group: runenv.testGroupID
+      }
+    }
+
+    await client.signalEvent(endEvent)
 
     runenv.recordMessage('network initialisation successful')
   }
