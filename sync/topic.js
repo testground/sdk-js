@@ -41,10 +41,14 @@ function subscribe ({ logger, extractor, redis }) {
 
     const key = topicKey(topic, params)
     let lastid = '0'
+    let run = true
 
-    return (async function * () {
-      while (true) {
-        // TODO: figure out way to cancel this.
+    const cancel = () => {
+      run = false
+    }
+
+    const wait = (async function * () {
+      while (run) { // eslint-disable-line
         const result = await redis.xread('COUNT', 10, 'BLOCK', 0, 'STREAMS', key, lastid)
 
         for (const [stream, values] of result) {
@@ -65,6 +69,11 @@ function subscribe ({ logger, extractor, redis }) {
         }
       }
     })()
+
+    return {
+      cancel,
+      wait
+    }
   }
 }
 
