@@ -18,7 +18,7 @@ async function invoke (fn) {
 }
 
 async function invokeHelper (runenv, fn) {
-  // TODO: the rest of the checks
+  runenv.recordStart()
 
   try {
     await fn(runenv)
