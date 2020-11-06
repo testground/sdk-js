@@ -32,32 +32,39 @@ function barrier ({ logger, extractor, redis }) {
     }
 
     const key = stateKey(state, params)
+    let run = true
+
+    const wait = (async () => {
+      // NOTE(hacdias): o sdk-go, we have a barrierWorker that fetches all barriers at once.
+      // For simplicity, I decided to create a async function here to wait for the result,
+      // so we'll be executing a READ for each ongoing barrier. I'm not completely sure if this
+      // is a good idea or if there is any specific reason why the Go implementation decided to go
+      // for a global barrier worker.
+
+      while (run) { // eslint-disable-line
+        const curr = await redis.get(key)
+
+        if (curr >= target) {
+          logger.debug('barrier was hit; informing waiters', { key, target, curr })
+          return
+        } else {
+          logger.debug('barrier still unsatisfied', { key, target, curr })
+        }
+
+        await sleep(1000) // 1s
+      }
+    })()
+
+    const cancel = () => {
+      run = false
+    }
 
     return {
       state,
       key,
       target,
-      wait: (async () => {
-        // TODO: cancel on redis disconnect (manual) and cancel method maybe?
-        // NOTE: o sdk-go, we have a barrierWorker that fetches all barriers at once.
-        // For simplicity, for now, I decided to create a async function here to wait for
-        // the result, so we'll be executing a READ for each ongoing barrier. I'm not
-        // completely sure if this is a good idea or if there is any specific reason why
-        // the Go implementation decided to go for a global barrier worker. (Ask @nonsense)
-
-        while (true) {
-          const curr = await redis.get(key)
-
-          if (curr >= target) {
-            logger.debug('barrier was hit; informing waiters', { key, target, curr })
-            return
-          } else {
-            logger.debug('barrier still unsatisfied', { key, target, curr })
-          }
-
-          await sleep(1000) // 1s
-        }
-      })()
+      wait,
+      cancel
     }
   }
 }
