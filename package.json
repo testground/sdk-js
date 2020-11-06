@@ -19,10 +19,10 @@
   },
   "homepage": "https://github.com/testground/sdk-js#readme",
   "devDependencies": {
-    "standard": "^14.3.4"
+    "standard": "^16.0.1"
   },
   "dependencies": {
-    "ioredis": "^4.17.3",
+    "ioredis": "^4.19.2",
     "ipaddr.js": "^2.0.0",
     "winston": "^3.3.3"
   }
