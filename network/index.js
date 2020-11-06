@@ -1,6 +1,9 @@
 const os = require('os')
 const ipaddr = require('ipaddr.js')
 
+const ALLOW_ALL = 'allow_all'
+const DENY_ALL = 'deny_all'
+
 function waitNetworkInitialized ({ client, runenv }) {
   return async () => {
     const startEvent = {
@@ -120,5 +123,7 @@ function newClient (client, runenv) {
 }
 
 module.exports = {
+  ALLOW_ALL,
+  DENY_ALL,
   newClient
 }

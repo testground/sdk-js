@@ -14,9 +14,6 @@ async function newClient (logger, extractor) {
     logger, extractor, redis
   }
 
-  // TODO: we need something to simulate contexts (or just deadlines)
-  // on most of the fuctions.
-
   const base = {
     ...createState(options),
     ...createTopic(options)
