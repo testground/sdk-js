@@ -66,10 +66,6 @@ function parseRunParams (env) {
     return json
   }
 
-  params.toEnvVars = () => {
-    // TODO
-  }
-
   return params
 }
 
