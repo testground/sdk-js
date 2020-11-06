@@ -1,5 +1,5 @@
 {
-  "name": "testground-sdk",
+  "name": "@testground/sdk",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
