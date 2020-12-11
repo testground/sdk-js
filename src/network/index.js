@@ -2,6 +2,7 @@
 
 const os = require('os')
 const ipaddr = require('ipaddr.js')
+const flatten = require('lodash.flatten')
 
 const ALLOW_ALL = 'allow_all'
 const DENY_ALL = 'deny_all'
@@ -93,7 +94,7 @@ function getDataNetworkIP ({ client, runenv }) {
       return '127.0.0.1'
     }
 
-    const ifaces = os.networkInterfaces().flat()
+    const ifaces = flatten(os.networkInterfaces())
 
     for (const { address, family } of ifaces) {
       if (family !== 'IPv4') {

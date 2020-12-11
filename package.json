@@ -26,12 +26,12 @@
     "release": "aegir release",
     "build": "aegir build",
     "test": "aegir test",
-    "test:node": "aegir test --target node",
-    "test:browser": "aegir test --target browser"
+    "test:node": "aegir test --target node"
   },
   "dependencies": {
     "ioredis": "^4.19.2",
     "ipaddr.js": "^2.0.0",
+    "lodash.flatten": "^4.4.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -40,5 +40,14 @@
   "engines": {
     "node": ">=10.0.0",
     "npm": ">=6.0.0"
+  },
+  "types": "dist/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "src/*": [
+        "dist/src/*",
+        "dist/src/*/index"
+      ]
+    }
   }
 }

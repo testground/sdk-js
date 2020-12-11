@@ -12,7 +12,7 @@ async function redisClient (logger) {
   const host = process.env[ENV_REDIS_HOST]
 
   if (process.env[ENV_REDIS_PORT]) {
-    port = Number.parseInt(process.env[ENV_REDIS_PORT])
+    port = Number.parseInt(process.env[ENV_REDIS_PORT] || '0')
   }
 
   logger.debug('trying redis host', { host, port })
