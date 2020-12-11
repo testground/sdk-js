@@ -1,3 +1,5 @@
+'use strict'
+
 const os = require('os')
 const ipaddr = require('ipaddr.js')
 
@@ -84,7 +86,7 @@ function normalizeConfig (config) {
 }
 
 function getDataNetworkIP ({ client, runenv }) {
-  return async () => {
+  return () => {
     if (!runenv.testSidecar) {
       // this must be a local:exec runner and we currently don't support
       // traffic shaping on it for now, just return the loopback address
@@ -96,15 +98,14 @@ function getDataNetworkIP ({ client, runenv }) {
     for (const { address, family } of ifaces) {
       if (family !== 'IPv4') {
         runenv.recordMessage(`ignoring non ip4 addr ${address}`)
-        continue
-      }
-
-      const addr = ipaddr.parse(address)
-      if (addr.match(runenv.testSubnet)) {
-        runenv.recordMessage(`detected data network IP: ${address}`)
-        return address
       } else {
-        runenv.recordMessage(`${address} not in data subnet ${runenv.testSubnet.toString()}`)
+        const addr = ipaddr.parse(address)
+        if (addr.match(runenv.testSubnet)) {
+          runenv.recordMessage(`detected data network IP: ${address}`)
+          return address
+        } else {
+          runenv.recordMessage(`${address} not in data subnet ${runenv.testSubnet.toString()}`)
+        }
       }
     }
 

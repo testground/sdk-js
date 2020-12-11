@@ -1,3 +1,5 @@
+'use strict'
+
 function publishAndWait ({ publish, barrier }) {
   return async (topic, payload, state, target) => {
     const seq = await publish(topic, payload)

@@ -1,3 +1,5 @@
+'use strict'
+
 const ipaddr = require('ipaddr.js')
 
 const ENV_TEST_BRANCH = 'TEST_BRANCH'
@@ -75,10 +77,9 @@ function unpackParams (packed) {
 
   for (const s of spltparams) {
     const v = s.split('=')
-    if (v.length !== 2) {
-      continue
+    if (v.length === 2) {
+      params[v[0]] = v[1]
     }
-    params[v[0]] = v[1]
   }
 
   return params

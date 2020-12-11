@@ -1,3 +1,5 @@
+'use strict'
+
 const { redisClient } = require('./redis')
 const { createState } = require('./state')
 const { createTopic } = require('./topic')

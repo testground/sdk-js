@@ -1,3 +1,5 @@
+'use strict'
+
 const { getLogger } = require('./logger')
 const { newEvents } = require('./events')
 const { parseRunParams } = require('./params')
