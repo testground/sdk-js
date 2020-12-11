@@ -16,8 +16,8 @@ jobs:
     - run: yarn lint
     - uses: gozala/typescript-error-reporter-action@v1.0.4
     # - run: yarn build
-    # - run: yarn aegir dep-check
-    - uses: ipfs/aegir/actions/bundle-size@master
+    - run: yarn aegir dep-check
+    # - uses: ipfs/aegir/actions/bundle-size@master
       name: size
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
