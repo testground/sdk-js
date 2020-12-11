@@ -18,9 +18,9 @@ jobs:
     # - run: yarn build
     - run: yarn aegir dep-check
     # - uses: ipfs/aegir/actions/bundle-size@master
-      name: size
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    #   name: size
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
   # test-node:
   #   needs: check
   #   runs-on: ${{ matrix.os }}
