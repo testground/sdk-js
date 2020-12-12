@@ -1,3 +1,5 @@
+'use strict'
+
 const os = require('os')
 const ipaddr = require('ipaddr.js')
 
@@ -84,7 +86,7 @@ function normalizeConfig (config) {
 }
 
 function getDataNetworkIP ({ client, runenv }) {
-  return async () => {
+  return () => {
     if (!runenv.testSidecar) {
       // this must be a local:exec runner and we currently don't support
       // traffic shaping on it for now, just return the loopback address

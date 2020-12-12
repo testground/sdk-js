@@ -1,3 +1,5 @@
+'use strict'
+
 const ipaddr = require('ipaddr.js')
 
 const ENV_TEST_BRANCH = 'TEST_BRANCH'

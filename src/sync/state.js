@@ -1,3 +1,5 @@
+'use strict'
+
 const { REDIS_PAYLOAD_KEY } = require('./redis')
 
 function sleep (ms) {

@@ -1,7 +1,8 @@
+'use strict'
+
 const Redis = require('ioredis')
 
 const REDIS_PAYLOAD_KEY = 'p'
-
 const ENV_REDIS_HOST = 'REDIS_HOST'
 const ENV_REDIS_PORT = 'REDIS_PORT'
 

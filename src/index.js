@@ -1,3 +1,5 @@
+'use strict'
+
 const runtime = require('./runtime')
 const sync = require('./sync')
 const network = require('./network')
