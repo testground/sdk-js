@@ -1,3 +1,5 @@
+'use strict'
+
 function newEvents ({ logger, runParams, getSignalEmitter }) {
   const emitEvent = async (event) => {
     const signalEmitter = getSignalEmitter()

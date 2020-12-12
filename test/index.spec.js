@@ -2,6 +2,6 @@
 /* eslint max-nested-callbacks: off */
 'use strict'
 
-it('TODO',function () {
-  console.log('TODO')
+it('TODO', function (done) {
+  done()
 })
