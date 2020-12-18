@@ -45,6 +45,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@types/ioredis": "^4.17.9",
     "aegir": "^30.0.1"
   },
   "engines": {
