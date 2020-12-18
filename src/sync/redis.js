@@ -6,12 +6,16 @@ const REDIS_PAYLOAD_KEY = 'p'
 const ENV_REDIS_HOST = 'REDIS_HOST'
 const ENV_REDIS_PORT = 'REDIS_PORT'
 
+/**
+ * @param {import('winston').Logger} logger
+ * @returns {Promise<Redis.Redis>}
+ */
 async function redisClient (logger) {
   let port = 6379
   const host = process.env[ENV_REDIS_HOST]
 
   if (process.env[ENV_REDIS_PORT]) {
-    port = Number.parseInt(process.env[ENV_REDIS_PORT])
+    port = Number.parseInt(process.env[ENV_REDIS_PORT] || '')
   }
 
   logger.debug('trying redis host', { host, port })
