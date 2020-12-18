@@ -1,6 +1,7 @@
 'use strict'
 
 const ipaddr = require('ipaddr.js')
+const os = require('os')
 
 const ALLOW_ALL = 'allow_all'
 const DENY_ALL = 'deny_all'
@@ -43,11 +44,9 @@ function normalizeConfig (config) {
 /**
  * @param {SyncClient} client
  * @param {RunEnv} runenv
- * @param {string} hostname
- * @param {import('os').NetworkInterfaceInfo[]} ifaces
  * @returns {NetworkClient}
  */
-function newClient (client, runenv, hostname, ifaces) {
+function newClient (client, runenv) {
   return {
     waitNetworkInitialized: async () => {
       const startEvent = {
@@ -90,7 +89,7 @@ function newClient (client, runenv, hostname, ifaces) {
         throw new Error('failed to configure network; no callback state provided')
       }
 
-      const topic = `network:${hostname}`
+      const topic = `network:${os.hostname()}`
       const target = (!config.callbackTarget || config.callbackTarget === 0)
         ? runenv.testInstanceCount // Fall back to instance count on zero value.
         : config.callbackTarget
@@ -103,6 +102,8 @@ function newClient (client, runenv, hostname, ifaces) {
         // traffic shaping on it for now, just return the loopback address
         return '127.0.0.1'
       }
+
+      const ifaces = getNetworkInterfaces()
 
       for (const { address, family } of ifaces) {
         if (family !== 'IPv4') {
@@ -121,6 +122,26 @@ function newClient (client, runenv, hostname, ifaces) {
       throw new Error(`unable to determine data network IP. no interface found with IP in ${runenv.testSubnet.toString()}`)
     }
   }
+}
+
+/**
+ * @returns {os.NetworkInterfaceInfo[]}
+ */
+function getNetworkInterfaces () {
+  const v = os.networkInterfaces()
+  if (!v) {
+    return /** @type {os.NetworkInterfaceInfo[]} */([])
+  }
+
+  const ifaces = /** @type {os.NetworkInterfaceInfo[]} */([])
+  for (const network in v) {
+    if (v[network]) {
+      // @ts-ignore
+      ifaces.push(...v[network])
+    }
+  }
+
+  return ifaces
 }
 
 module.exports = {
