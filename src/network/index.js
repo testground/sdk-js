@@ -1,68 +1,23 @@
 'use strict'
 
-const os = require('os')
 const ipaddr = require('ipaddr.js')
 
 const ALLOW_ALL = 'allow_all'
 const DENY_ALL = 'deny_all'
 
-function waitNetworkInitialized ({ client, runenv }) {
-  return async () => {
-    const startEvent = {
-      stage_start_event: {
-        name: 'network-initialized',
-        group: runenv.testGroupID
-      }
-    }
+/** @typedef {import('../runtime').RunEnv} RunEnv */
+/** @typedef {import('../sync').SyncClient} SyncClient */
+/** @typedef {import('./types').NetworkClient} NetworkClient */
+/** @typedef {import('./types').Config} Config */
 
-    await client.signalEvent(startEvent)
-
-    if (runenv.testSidecar) {
-      try {
-        const barrier = await client.barrier('network-initialized', runenv.testInstanceCount)
-        await barrier.wait
-      } catch (err) {
-        runenv.recordMessage('network initialisation failed')
-        throw err
-      }
-    }
-
-    const endEvent = {
-      stage_end_event: {
-        name: 'network-initialized',
-        group: runenv.testGroupID
-      }
-    }
-
-    await client.signalEvent(endEvent)
-
-    runenv.recordMessage('network initialisation successful')
-  }
-}
-
-function configureNetwork ({ client, runenv }) {
-  return async (config) => {
-    if (!runenv.testSidecar) {
-      runenv.logger.warn('ignoring network change request; running in a sidecar-less environment')
-      return
-    }
-
-    if (!config.callbackState) {
-      throw new Error('failed to configure network; no callback state provided')
-    }
-
-    const hostname = os.hostname()
-    const topic = `network:${hostname}`
-    const target = (!config.callbackTarget || config.callbackTarget === 0)
-      ? runenv.testInstanceCount // Fall back to instance count on zero value.
-      : config.callbackTarget
-
-    await client.publishAndWait(topic, normalizeConfig(config), config.callbackState, target)
-  }
-}
-
-// normalizeConfig converts the configuration from the JavaScript lowerCamelCase version to the
-// Go CammelCase version. More about this is mentioned at https://github.com/testground/sdk-go/pull/34
+/**
+ * Converts the configuration from the JavaScript lowerCamelCase version to the
+ * Go CammelCase version. More about this is mentioned at
+ * https://github.com/testground/sdk-go/pull/34
+ *
+ * @param {Config} config
+ * @returns {Record<string, any>}
+ */
 function normalizeConfig (config) {
   if (typeof config !== 'object') {
     return config
@@ -72,7 +27,7 @@ function normalizeConfig (config) {
     return config.map(normalizeConfig)
   }
 
-  const parsed = {}
+  const parsed = /** @type {Record<string, any>} */({})
 
   for (const [key, value] of Object.entries(config)) {
     const newKey = key === 'IPv4' || key === 'IPv6'
@@ -85,42 +40,86 @@ function normalizeConfig (config) {
   return parsed
 }
 
-function getDataNetworkIP ({ client, runenv }) {
-  return () => {
-    if (!runenv.testSidecar) {
-      // this must be a local:exec runner and we currently don't support
-      // traffic shaping on it for now, just return the loopback address
-      return '127.0.0.1'
-    }
-
-    const ifaces = os.networkInterfaces().flat()
-
-    for (const { address, family } of ifaces) {
-      if (family !== 'IPv4') {
-        runenv.recordMessage(`ignoring non ip4 addr ${address}`)
-        continue
-      }
-
-      const addr = ipaddr.parse(address)
-      if (addr.match(runenv.testSubnet)) {
-        runenv.recordMessage(`detected data network IP: ${address}`)
-        return address
-      } else {
-        runenv.recordMessage(`${address} not in data subnet ${runenv.testSubnet.toString()}`)
-      }
-    }
-
-    throw new Error(`unable to determine data network IP. no interface found with IP in ${runenv.testSubnet.toString()}`)
-  }
-}
-
-function newClient (client, runenv) {
-  const options = { client, runenv }
-
+/**
+ * @param {SyncClient} client
+ * @param {RunEnv} runenv
+ * @param {string} hostname
+ * @param {import('os').NetworkInterfaceInfo[]} ifaces
+ * @returns {NetworkClient}
+ */
+function newClient (client, runenv, hostname, ifaces) {
   return {
-    waitNetworkInitialized: waitNetworkInitialized(options),
-    configureNetwork: configureNetwork(options),
-    getDataNetworkIP: getDataNetworkIP(options)
+    waitNetworkInitialized: async () => {
+      const startEvent = {
+        stage_start_event: {
+          name: 'network-initialized',
+          group: runenv.testGroupId
+        }
+      }
+
+      await client.signalEvent(startEvent)
+
+      if (runenv.testSidecar) {
+        try {
+          const barrier = await client.barrier('network-initialized', runenv.testInstanceCount)
+          await barrier.wait
+        } catch (err) {
+          runenv.recordMessage('network initialisation failed')
+          throw err
+        }
+      }
+
+      const endEvent = {
+        stage_end_event: {
+          name: 'network-initialized',
+          group: runenv.testGroupId
+        }
+      }
+
+      await client.signalEvent(endEvent)
+
+      runenv.recordMessage('network initialisation successful')
+    },
+    configureNetwork: async (config) => {
+      if (!runenv.testSidecar) {
+        runenv.logger.warn('ignoring network change request; running in a sidecar-less environment')
+        return
+      }
+
+      if (!config.callbackState) {
+        throw new Error('failed to configure network; no callback state provided')
+      }
+
+      const topic = `network:${hostname}`
+      const target = (!config.callbackTarget || config.callbackTarget === 0)
+        ? runenv.testInstanceCount // Fall back to instance count on zero value.
+        : config.callbackTarget
+
+      await client.publishAndWait(topic, normalizeConfig(config), config.callbackState, target)
+    },
+    getDataNetworkIP: () => {
+      if (!runenv.testSidecar) {
+        // this must be a local:exec runner and we currently don't support
+        // traffic shaping on it for now, just return the loopback address
+        return '127.0.0.1'
+      }
+
+      for (const { address, family } of ifaces) {
+        if (family !== 'IPv4') {
+          runenv.recordMessage(`ignoring non ip4 addr ${address}`)
+        } else {
+          const addr = ipaddr.parse(address)
+          if (addr.match(runenv.testSubnet)) {
+            runenv.recordMessage(`detected data network IP: ${address}`)
+            return address
+          } else {
+            runenv.recordMessage(`${address} not in data subnet ${runenv.testSubnet.toString()}`)
+          }
+        }
+      }
+
+      throw new Error(`unable to determine data network IP. no interface found with IP in ${runenv.testSubnet.toString()}`)
+    }
   }
 }
 
