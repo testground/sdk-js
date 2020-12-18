@@ -2,6 +2,8 @@
 
 const ipaddr = require('ipaddr.js')
 
+/** @typedef {import('./types').RunParams} RunParams */
+
 const ENV_TEST_BRANCH = 'TEST_BRANCH'
 const ENV_TEST_CASE = 'TEST_CASE'
 const ENV_TEST_GROUP_ID = 'TEST_GROUP_ID'
@@ -18,24 +20,28 @@ const ENV_TEST_START_TIME = 'TEST_START_TIME'
 const ENV_TEST_SUBNET = 'TEST_SUBNET'
 const ENV_TEST_TAG = 'TEST_TAG'
 
+/**
+ * @param {Record<string, string|undefined>} env
+ * @returns {RunParams}
+ */
 function parseRunParams (env) {
-  const params = {
-    testBranch: env[ENV_TEST_BRANCH],
-    testCase: env[ENV_TEST_CASE],
-    testGroupId: env[ENV_TEST_GROUP_ID],
-    testGroupInstanceCount: Number.parseInt(env[ENV_TEST_GROUP_INSTANCE_COUNT]),
-    testInstanceCount: Number.parseInt(env[ENV_TEST_INSTANCE_COUNT]),
-    testInstanceParams: unpackParams(env[ENV_TEST_INSTANCE_PARAMS]),
-    testInstanceRole: env[ENV_TEST_INSTANCE_ROLE],
-    testOutputsPath: env[ENV_TEST_OUTPUTS_PATH],
-    testPlan: env[ENV_TEST_PLAN],
-    testRepo: env[ENV_TEST_REPO],
-    testRun: env[ENV_TEST_RUN],
-    testSidecar: env[ENV_TEST_SIDECAR] === 'true',
-    testStartTime: Date.parse(ENV_TEST_START_TIME),
-    testSubnet: ipaddr.parseCIDR(env[ENV_TEST_SUBNET]),
-    testTag: env[ENV_TEST_TAG]
-  }
+  const params = /** @type {RunParams} */({})
+
+  params.testBranch = env[ENV_TEST_BRANCH] || ''
+  params.testCase = env[ENV_TEST_CASE] || ''
+  params.testGroupId = env[ENV_TEST_GROUP_ID] || ''
+  params.testGroupInstanceCount = Number.parseInt(env[ENV_TEST_GROUP_INSTANCE_COUNT] || '')
+  params.testInstanceCount = Number.parseInt(env[ENV_TEST_INSTANCE_COUNT] || '')
+  params.testInstanceParams = unpackParams(env[ENV_TEST_INSTANCE_PARAMS] || '')
+  params.testInstanceRole = env[ENV_TEST_INSTANCE_ROLE] || ''
+  params.testOutputsPath = env[ENV_TEST_OUTPUTS_PATH] || ''
+  params.testPlan = env[ENV_TEST_PLAN] || ''
+  params.testRepo = env[ENV_TEST_REPO] || ''
+  params.testRun = env[ENV_TEST_RUN] || ''
+  params.testSidecar = env[ENV_TEST_SIDECAR] === 'true'
+  params.testStartTime = Date.parse(ENV_TEST_START_TIME)
+  params.testSubnet = ipaddr.parseCIDR(env[ENV_TEST_SUBNET] || '')
+  params.testTag = env[ENV_TEST_TAG] || ''
 
   params.toJSON = () => {
     const json = {
@@ -46,15 +52,14 @@ function parseRunParams (env) {
       outputs_path: params.testOutputsPath,
       network: params.testSubnet.toString(),
       group: params.testGroupId,
-      group_instances: params.testGroupInstanceCount
+      group_instances: params.testGroupInstanceCount,
+      repo: '',
+      branch: '',
+      tag: ''
     }
 
     if (params.testRepo) {
       json.repo = params.testRepo
-    }
-
-    if (params.testCommit) {
-      json.commit = params.testCommit
     }
 
     if (params.testBranch) {
@@ -71,16 +76,19 @@ function parseRunParams (env) {
   return params
 }
 
+/**
+ * @param {string} packed
+ * @returns {Record<string, string>}
+ */
 function unpackParams (packed) {
   const spltparams = packed.split('|')
-  const params = {}
+  const params = /** @type {Record<string, string>} */({})
 
   for (const s of spltparams) {
     const v = s.split('=')
-    if (v.length !== 2) {
-      continue
+    if (v.length === 2) {
+      params[v[0]] = v[1]
     }
-    params[v[0]] = v[1]
   }
 
   return params

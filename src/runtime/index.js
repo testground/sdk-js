@@ -4,28 +4,47 @@ const { getLogger } = require('./logger')
 const { newEvents } = require('./events')
 const { parseRunParams } = require('./params')
 
+/** @typedef {import('./types').RunParams} RunParams */
+/** @typedef {import('./types').SignalEmitter} SignalEmitter */
+/** @typedef {import('./types').RunEnv} RunEnv */
+
+/**
+ * Creates a runtime environment from the environment variables.
+ *
+ * @returns {RunEnv}
+ */
 function currentRunEnv () {
   return parseRunEnv(process.env)
 }
 
+/**
+ * Creates a runtime environment from the provided list of variables.
+ *
+ * @param {Record<string, string|undefined>} env
+ */
 function parseRunEnv (env) {
   const p = parseRunParams(env)
   return newRunEnv(p)
 }
 
+/**
+ * Creates a runtime environment from the given runtime parameters.
+ *
+ * @param {RunParams} params
+ * @returns {RunEnv}
+ */
 function newRunEnv (params) {
-  let signalEmitter = null
+  let signalEmitter = /** @type {SignalEmitter|null} */(null)
 
-  const options = {
-    runParams: params,
-    logger: getLogger(params),
-    getSignalEmitter: () => signalEmitter
-  }
+  const getSignalEmitter = () => signalEmitter
+  const logger = getLogger(params)
 
   return {
     ...params,
-    ...options,
-    ...newEvents(options),
+    ...newEvents(params, logger, getSignalEmitter),
+    logger: logger,
+    runParams: params,
+    getSignalEmitter: getSignalEmitter,
     setSignalEmitter: (e) => { signalEmitter = e }
   }
 }

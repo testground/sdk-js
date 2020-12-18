@@ -3,6 +3,10 @@
 const winston = require('winston')
 const path = require('path')
 
+/**
+ * @param {import('./params').RunParams} params
+ * @returns {winston.Logger}
+ */
 function getLogger (params) {
   const format = winston.format.combine(
     winston.format((info, opts = {}) => {

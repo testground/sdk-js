@@ -1,6 +1,20 @@
 'use strict'
 
-function newEvents ({ logger, runParams, getSignalEmitter }) {
+/** @typedef {import('./types').RunParams} RunParams */
+/** @typedef {import('./types').SignalEmitter} SignalEmitter */
+/** @typedef {import('./types').Events} Events */
+/** @typedef {import('winston').Logger} Logger */
+
+/**
+ * @param {RunParams} runParams
+ * @param {Logger} logger
+ * @param {function():SignalEmitter|null} getSignalEmitter
+ * @returns {Events}
+ */
+function newEvents (runParams, logger, getSignalEmitter) {
+  /**
+   * @param {Object} event
+   */
   const emitEvent = async (event) => {
     const signalEmitter = getSignalEmitter()
 
@@ -38,7 +52,7 @@ function newEvents ({ logger, runParams, getSignalEmitter }) {
     recordSuccess: () => {
       const event = {
         success_event: {
-          group: runParams.testGroupID
+          group: runParams.testGroupId
         }
       }
 
@@ -49,7 +63,7 @@ function newEvents ({ logger, runParams, getSignalEmitter }) {
     recordFailure: (err) => {
       const event = {
         failure_event: {
-          group: runParams.testGroupID,
+          group: runParams.testGroupId,
           error: err.toString()
         }
       }
@@ -61,7 +75,7 @@ function newEvents ({ logger, runParams, getSignalEmitter }) {
     recordCrash: (err) => {
       const event = {
         crash_event: {
-          group: runParams.testGroupID,
+          group: runParams.testGroupId,
           error: err.toString(),
           stacktrace: err.stack
         }
