@@ -1,7 +1,4 @@
 export interface Barrier {
-  state: string
-  key: string
-  target: number
   wait: Promise<void>
   cancel: () => void
 }
@@ -37,4 +34,62 @@ export interface Sugar {
 
 export interface SyncClient extends State, Topic, Sugar {
   close: () => void
+}
+
+export interface PublishRequest {
+  topic: string
+  payload: any
+}
+
+export interface PublishResponse {
+  seq: number
+}
+
+export interface SubscribeRequest {
+  topic: string
+}
+
+export interface BarrierRequest {
+  state: string
+  target: number
+}
+
+export interface SignalEntryRequest {
+  state: string
+}
+
+export interface SignalEntryResponse {
+  seq: number
+}
+export interface Request {
+  id?: string
+  isCancel?: boolean
+  publish?: PublishRequest
+  subscribe?: SubscribeRequest
+  barrier?: BarrierRequest
+  signal_entry?: SignalEntryRequest
+}
+
+export interface Response {
+  id: string
+  error: string
+  publish: PublishResponse
+  subscribe: string // JSON Encoded Response
+  signal_entry: SignalEntryResponse
+}
+
+export interface ResponseIterator {
+  cancel: () => void
+  wait: AsyncGenerator<Response, void, unknown>
+}
+
+export interface Socket {
+  close: () => void
+  requestOnce: (req: Request) => Promise<Response>
+  request: (req: Request) => ResponseIterator
+}
+
+export interface PubSub {
+  publish: (topic: string, payload: any) => Promise<number>
+  subscribe: (key: string) => Promise<Subscribe>
 }

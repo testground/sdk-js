@@ -1,19 +1,12 @@
 'use strict'
 
-const { REDIS_PAYLOAD_KEY } = require('./redis')
-
 /** @typedef {import('../runtime').RunParams} RunParams */
 /** @typedef {import('./types').State} State */
-
-/**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-function sleep (ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+/** @typedef {import('./types').Response} Response */
+/** @typedef {import('./types').Request} Request */
+/** @typedef {import('./types').Socket} Socket */
+/** @typedef {import('./types').PubSub} PubSub */
+/** @typedef {import('events').EventEmitter} EventEmitter */
 
 /**
  * @param {string} state
@@ -35,10 +28,11 @@ function eventsKey (params) {
 /**
  * @param {import('winston').Logger} logger
  * @param {function():Promise<RunParams>} extractor
- * @param {import('ioredis').Redis} redis
+ * @param {PubSub} pubsub
+ * @param {Socket} socket
  * @returns {State}
  */
-function createState (logger, extractor, redis) {
+function createState (logger, extractor, pubsub, socket) {
   return {
     barrier: async (state, target) => {
       // a barrier with target zero is satisfied immediately; log a warning as
@@ -46,9 +40,6 @@ function createState (logger, extractor, redis) {
       if (target === 0) {
         logger.warn('requested a barrier with target zero; satisfying immediately', { state })
         return {
-          state,
-          key: '',
-          target: target,
           cancel: () => {},
           wait: Promise.resolve()
         }
@@ -60,43 +51,23 @@ function createState (logger, extractor, redis) {
       }
 
       const key = stateKey(state, params)
-      let run = true
+
+      const res = socket.request({
+        barrier: {
+          state: key,
+          target
+        }
+      })
 
       const wait = (async () => {
-        // NOTE(hacdias): o sdk-go, we have a barrierWorker that fetches all barriers at once.
-        // For simplicity, I decided to create a async function here to wait for the result,
-        // so we'll be executing a READ for each ongoing barrier. I'm not completely sure if this
-        // is a good idea or if there is any specific reason why the Go implementation decided to go
-        // for a global barrier worker.
-
-        while (run) { // eslint-disable-line
-          const curr = await redis.get(key)
-
-          if (curr) {
-            const num = Number.parseInt(curr)
-
-            if (num >= target) {
-              logger.debug('barrier was hit; informing waiters', { key, target, curr })
-              return
-            } else {
-              logger.debug('barrier still unsatisfied', { key, target, curr })
-            }
-          }
-
-          await sleep(1000) // 1s
-        }
+        // Waits till next (and single) reply.
+        await res.wait.next()
+        res.cancel()
       })()
 
-      const cancel = () => {
-        run = false
-      }
-
       return {
-        state,
-        key,
-        target,
         wait,
-        cancel
+        cancel: res.cancel
       }
     },
     signalEntry: async (state) => {
@@ -108,11 +79,20 @@ function createState (logger, extractor, redis) {
       const key = stateKey(state, params)
       logger.debug('signalling entry to state', { key })
 
-      const seq = await redis.incr(key)
-      logger.debug('new value of state', { key, value: seq })
+      const res = await socket.requestOnce({
+        signal_entry: {
+          state: key
+        }
+      })
 
-      return seq
+      if (res.error) {
+        throw new Error(res.error)
+      }
+
+      logger.debug('new value of state', { key, value: res.signal_entry.seq })
+      return res.signal_entry.seq
     },
+
     signalEvent: async (event) => {
       const params = await extractor()
       if (!params) {
@@ -121,9 +101,7 @@ function createState (logger, extractor, redis) {
 
       const key = eventsKey(params)
       logger.debug('signalling event', { key, value: event })
-
-      const json = JSON.stringify(event)
-      await redis.xadd(key, '*', REDIS_PAYLOAD_KEY, json)
+      await pubsub.publish(key, event)
       logger.debug('successfully signalled event', { key })
     }
   }

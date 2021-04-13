@@ -39,16 +39,18 @@
     "test:browser": "aegir test --target browser"
   },
   "dependencies": {
-    "ioredis": "^4.19.4",
+    "emittery": "^0.8.1",
     "ipaddr.js": "^2.0.0",
+    "isomorphic-ws": "^4.0.1",
     "lodash.flatten": "^4.4.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "ws": "^7.4.4"
   },
   "devDependencies": {
-    "@types/ioredis": "^4.17.9",
-    "aegir": "^30.0.1"
+    "@types/ws": "^7.4.1",
+    "aegir": "^33.0.0"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   }
 }
