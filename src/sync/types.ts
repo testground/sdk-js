@@ -38,3 +38,11 @@ export interface Sugar {
 export interface SyncClient extends State, Topic, Sugar {
   close: () => void
 }
+
+export interface Redis {
+  ping: (...args: any) => Promise<any>
+  incr: (...args: any) => Promise<any>
+  get: (...args: any) => Promise<any>
+  xadd: (...args: any) => Promise<any>
+  xread: (...args: any) => Promise<any>
+}
