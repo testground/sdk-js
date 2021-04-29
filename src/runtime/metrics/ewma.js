@@ -35,9 +35,7 @@ function newEWMA (name, alpha) {
     rate: () => {
       return rate * 1e9
     },
-    // Tick ticks the clock to update the moving average.  It assumes it is called
-    // every five seconds.
-    // TODO: check how to not need to call it every 5 secs.
+    // It assumes it is called every five seconds.
     tick: () => {
       if (init === 1) {
         updateRate(fetchInstantRate())
