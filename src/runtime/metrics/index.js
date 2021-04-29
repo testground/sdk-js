@@ -1,11 +1,15 @@
 'use strict'
 
-const { newPoint, newCounter, newEWMA, newMeter, newTimer } = require('./metrics_types')
+const { newCounter } = require('./counter')
+const { newEWMA } = require('./ewma')
+const { newMeter } = require('./meter')
+const { newPoint } = require('./point')
+const { newTimer } = require('./timer')
 
-/** @typedef {import('./types').Events} Events */
-/** @typedef {import('./types').RunParams} RunParams */
-/** @typedef {import('./types').SignalEmitter} SignalEmitter */
-/** @typedef {import('./types').RunEnv} RunEnv */
+/** @typedef {import('../types').Events} Events */
+/** @typedef {import('../types').RunParams} RunParams */
+/** @typedef {import('../types').SignalEmitter} SignalEmitter */
+/** @typedef {import('../types').RunEnv} RunEnv */
 /** @typedef {import('winston').Logger} Logger */
 /** @typedef {import('./types').Metric} Metric */
 /** @typedef {import('./types').Metrics} Metrics */
