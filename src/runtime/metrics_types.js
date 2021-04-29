@@ -121,10 +121,10 @@ function newEWMA (name, alpha) {
       }
     },
     /**
-     * @param {number} i
+     * @param {number} n
      */
-    update: (i) => {
-      uncounted += i
+    update: (n) => {
+      uncounted += n
     }
   }
 
@@ -140,15 +140,39 @@ function newEWMA (name, alpha) {
 
 /**
  * @param {string} name
- * @param {Function | null} func
+ * @param {Function} func
  * @returns {Gauge}
  */
-function newGauge (name, func) {
+function newFunctionalGauge (name, func) {
   return {
+    update: (n) => {
+      throw new Error('cannot update functional gauge')
+    },
+    value: () => {
+      return func()
+    },
     toMetric: () => {
-      const metric = createMetric(name, metricGauge, {})
-      // TODO
-      return metric
+      return createMetric(name, metricGauge, { value: func() })
+    }
+  }
+}
+
+/**
+ * @param {string} name
+ * @returns {Gauge}
+ */
+function newStandardGauge (name) {
+  let value = 0
+
+  return {
+    update: (n) => {
+      value = n
+    },
+    value: () => {
+      return value
+    },
+    toMetric: () => {
+      return createMetric(name, metricGauge, { value })
     }
   }
 }
@@ -199,7 +223,8 @@ function newTimer (name) {
 module.exports = {
   newPoint,
   newCounter,
-  newGauge,
+  newStandardGauge,
+  newFunctionalGauge,
   newEWMA,
   newHistogram,
   newMeter,

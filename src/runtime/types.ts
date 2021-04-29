@@ -81,11 +81,12 @@ export interface Counter extends toMetric {
 export interface EWMA extends toMetric {
   rate: () => number
   tick: () => void
-  update: (i: number) => void
+  update: (n: number) => void
 }
 
 export interface Gauge extends toMetric {
-
+  update: (n: number) => void
+  value: () => number
 }
 
 export interface Histogram extends toMetric {
