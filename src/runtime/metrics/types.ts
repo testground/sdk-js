@@ -47,13 +47,13 @@ export interface Gauge extends toMetric {
 }
 
 export interface Meter extends toMetric {
-  // count: () => number
-  // mark: () => number
-  // rate1: () => number
-  // rate5: () => number
-  // rate15: () => number
-  // rateMean: () => number
-  // stop: () => void
+  count: () => number
+  mark: (n: number) => number
+  rate1: () => number
+  rate5: () => number
+  rate15: () => number
+  rateMean: () => number
+  stop: () => void
 }
 
 export interface Timer extends toMetric {
