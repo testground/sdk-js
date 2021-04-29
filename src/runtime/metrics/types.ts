@@ -10,6 +10,7 @@ export interface MetricsApi {
   ewma: (name: string, alpha: number) => EWMA
   gauge: (name: string) => Gauge
   gaugeF: (name: string, func: () => number) => Gauge
+  histogram: (name: string, sample: Sample) => Histogram
   meter: (name: string) => Meter
   timer: (name: string) => Timer
 }
@@ -60,7 +61,7 @@ export interface Sample {
   mean: () => number
   min: () => number
   percentile: (n: number) => number
-  percentiles: (n: number[]) => number
+  percentiles: (n: number[]) => number[]
   size: () => number
   stdDev: () => number
   sum: () => number

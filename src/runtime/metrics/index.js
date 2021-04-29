@@ -3,6 +3,7 @@
 const { newCounter } = require('./counter')
 const { newEWMA } = require('./ewma')
 const { newStandardGauge, newFunctionalGauge } = require('./gauge')
+const { newHistogram } = require('./histogram')
 const { newMeter } = require('./meter')
 const { newPoint } = require('./point')
 const { newTimer } = require('./timer')
@@ -77,9 +78,11 @@ function makeMetrics (sinks, events) {
       // TODO
       return gauge
     },
-    // histogram: (name, sample) => {
-    //   // TODO: return type Histogram
-    // },
+    histogram: (name, sample) => {
+      const histogram = newHistogram(name, sample)
+      // TODO
+      return histogram
+    },
     meter: (name) => {
       const meter = newMeter(name)
       // TODO
