@@ -56,10 +56,6 @@ export interface Meter extends toMetric {
   stop: () => void
 }
 
-export interface Timer extends toMetric {
-
-}
-
 interface sample {
   clear: () => void
   count: () => number
@@ -72,7 +68,6 @@ interface sample {
   stdDev: () => number
   sum: () => number
   update: (n: number) => void
-  values: () => number[]
   variance: () => number
 }
 
@@ -82,4 +77,24 @@ export interface Sample extends sample {
 
 export interface Histogram extends sample, toMetric {
   sample: () => Sample
+}
+
+export interface Timer extends toMetric {
+  count: () => number
+  max: () => number
+  mean: () => number
+  min: () => number
+  percentile: (n: number) => number
+  percentiles: (n: number[]) => number[]
+  rate1: () => number
+  rate5: () => number
+  rate15: () => number
+  rateMean: () => number
+  stdDev: () => number
+  stop: () => void
+  sum: () => number
+  time: (func: () => void) => void
+  update: (n: number) => void
+  updateSince: (d: Date) => void
+  variance: () => number
 }
