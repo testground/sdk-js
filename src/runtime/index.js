@@ -39,11 +39,13 @@ function newRunEnv (params) {
 
   const getSignalEmitter = () => signalEmitter
   const logger = getLogger(params)
+  const events = newEvents(params, logger, getSignalEmitter)
+  const metrics = newMetrics(params, logger, events, getSignalEmitter)
 
   return {
     ...params,
-    ...newEvents(params, logger, getSignalEmitter),
-    ...newMetrics(params, logger, getSignalEmitter),
+    ...events,
+    ...metrics,
     logger: logger,
     runParams: params,
     getSignalEmitter: getSignalEmitter,
