@@ -21,7 +21,7 @@ export interface Metrics {
   close: () => void
 }
 
-export interface toMetric {
+interface toMetric {
   toMetric: () => Metric
 }
 export interface Point extends toMetric {
@@ -47,14 +47,20 @@ export interface Gauge extends toMetric {
 }
 
 export interface Meter extends toMetric {
-
+  // count: () => number
+  // mark: () => number
+  // rate1: () => number
+  // rate5: () => number
+  // rate15: () => number
+  // rateMean: () => number
+  // stop: () => void
 }
 
 export interface Timer extends toMetric {
 
 }
 
-export interface Sample {
+interface sample {
   clear: () => void
   count: () => number
   max: () => number
@@ -70,6 +76,10 @@ export interface Sample {
   variance: () => number
 }
 
-export interface Histogram extends toMetric, Sample {
+export interface Sample extends sample {
+  values: () => number[]
+}
+
+export interface Histogram extends sample, toMetric {
   sample: () => Sample
 }
