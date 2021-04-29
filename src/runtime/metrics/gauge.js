@@ -7,7 +7,7 @@ const { createMetric, metricTypes } = require('./utils')
 
 /**
  * @param {string} name
- * @param {Function} func
+ * @param {function():number} func
  * @returns {Gauge}
  */
 function newFunctionalGauge (name, func) {

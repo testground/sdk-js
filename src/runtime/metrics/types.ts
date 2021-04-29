@@ -8,6 +8,8 @@ export interface MetricsApi {
   recordPoint: (name: string, value: number) => void
   counter: (name: string) => Counter
   ewma: (name: string, alpha: number) => EWMA
+  gauge: (name: string) => Gauge
+  gaugeF: (name: string, func: () => number) => Gauge
   meter: (name: string) => Meter
   timer: (name: string) => Timer
 }
@@ -43,13 +45,30 @@ export interface Gauge extends toMetric {
   value: () => number
 }
 
-export interface Histogram extends toMetric {
-
-}
 export interface Meter extends toMetric {
 
 }
 
 export interface Timer extends toMetric {
 
+}
+
+export interface Sample {
+  clear: () => void
+  count: () => number
+  max: () => number
+  mean: () => number
+  min: () => number
+  percentile: (n: number) => number
+  percentiles: (n: number[]) => number
+  size: () => number
+  stdDev: () => number
+  sum: () => number
+  update: (n: number) => void
+  values: () => number[]
+  variance: () => number
+}
+
+export interface Histogram extends toMetric, Sample {
+  sample: () => Sample
 }

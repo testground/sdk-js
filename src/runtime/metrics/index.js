@@ -2,6 +2,7 @@
 
 const { newCounter } = require('./counter')
 const { newEWMA } = require('./ewma')
+const { newStandardGauge, newFunctionalGauge } = require('./gauge')
 const { newMeter } = require('./meter')
 const { newPoint } = require('./point')
 const { newTimer } = require('./timer')
@@ -66,9 +67,16 @@ function makeMetrics (sinks, events) {
       // TODO
       return ewma
     },
-    // gauge: name => {
-    //   // TODO: return type Gauge
-    // },
+    gauge: (name) => {
+      const gauge = newStandardGauge(name)
+      // TODO
+      return gauge
+    },
+    gaugeF: (name, func) => {
+      const gauge = newFunctionalGauge(name, func)
+      // TODO
+      return gauge
+    },
     // histogram: (name, sample) => {
     //   // TODO: return type Histogram
     // },
@@ -91,6 +99,10 @@ function makeMetrics (sinks, events) {
     // close: () => {
     //   // TODO: probably not needed
     // }
+
+    // newExpDecaySample
+
+    // newUniformSample
   }
 }
 
