@@ -14,13 +14,14 @@ const { newPoint, newCounter, newEWMA, newMeter, newTimer } = require('./metrics
 /**
  * @param {RunParams} runParams
  * @param {Logger} logger
+ * @param {Events} events
  * @param {function():SignalEmitter|null} getSignalEmitter
  * @returns {Metrics}
  */
-function newMetrics (runParams, logger, getSignalEmitter) {
+function newMetrics (runParams, logger, events, getSignalEmitter) {
   return {
-    d: makeMetrics(),
-    r: makeMetrics(),
+    d: makeMetrics([], events),
+    r: makeMetrics([], events),
     close: () => {
       // TODO: probably not needed
     }

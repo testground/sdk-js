@@ -79,7 +79,9 @@ export interface Counter extends toMetric {
 }
 
 export interface EWMA extends toMetric {
-
+  rate: () => number
+  tick: () => void
+  update: (i: number) => void
 }
 
 export interface Gauge extends toMetric {
