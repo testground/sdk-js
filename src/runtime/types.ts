@@ -1,5 +1,6 @@
 import type { IPv4, IPv6 } from 'ipaddr.js'
 import type { Logger } from 'winston'
+import type { Metrics } from './metrics'
 
 export interface RunParams {
   testBranch: string
@@ -37,7 +38,7 @@ export interface Events {
   recordCrash: (err: Error) => void
 }
 
-export interface RunEnv extends Events, RunParams {
+export interface RunEnv extends Events, RunParams, Metrics {
   logger: Logger
   runParams: RunParams
   getSignalEmitter: () => SignalEmitter|null

@@ -2,6 +2,7 @@
 
 const { getLogger } = require('./logger')
 const { newEvents } = require('./events')
+const { newMetrics } = require('./metrics')
 const { parseRunParams } = require('./params')
 
 /** @typedef {import('./types').RunParams} RunParams */
@@ -38,10 +39,13 @@ function newRunEnv (params) {
 
   const getSignalEmitter = () => signalEmitter
   const logger = getLogger(params)
+  const events = newEvents(params, logger, getSignalEmitter)
+  const metrics = newMetrics(params, logger, events, getSignalEmitter)
 
   return {
     ...params,
-    ...newEvents(params, logger, getSignalEmitter),
+    ...events,
+    ...metrics,
     logger: logger,
     runParams: params,
     getSignalEmitter: getSignalEmitter,
