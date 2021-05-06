@@ -48,20 +48,22 @@ function newHistogram (name, sample) {
   }
 }
 
-// /**
-//  * @param {string} name
-//  * @returns {Histogram}
-//  */
-// function newResettingHistogram (name) {
-//   return {
-//     toMetric: () => {
-//       const metric = createMetric(name, metricTypes.histogram, {})
-//       // TODO
-//       return metric
-//     }
-//   }
-// }
+/**
+ * @param {string} name
+ * @returns {Histogram}
+ */
+function newResettingHistogram (name) {
+  // TODO: implement
+  return {
+    toMetric: () => {
+      const metric = createMetric(name, metricTypes.histogram, {})
+      // TODO
+      return metric
+    }
+  }
+}
 
 module.exports = {
-  newHistogram
+  newHistogram,
+  newResettingHistogram
 }

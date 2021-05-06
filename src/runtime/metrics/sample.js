@@ -1,6 +1,7 @@
 'use strict'
 
 /** @typedef {import('./types').Sample} Sample */
+/** @typedef {import('./types').expDecaySample} expDecaySample */
 
 /**
  *
@@ -9,6 +10,7 @@
  * @returns {Sample}
  */
 function newExpDecaySample (reservoirSize, alpha) {
+  // TODO: implement; use newExpDecaySampleHeap
   return {}
 }
 
@@ -139,4 +141,73 @@ function samplePercentiles (values, ps) {
  */
 function samplePercentile (values, p) {
   return samplePercentiles(values, [p])[0]
+}
+
+/**
+ *
+ * @param {number} reservoirSize
+ * @returns
+ */
+function newExpDecaySampleHeap (reservoirSize) {
+  let values = /** @type expDecaySample[] */([])
+
+  /**
+   * @param {number} j
+   */
+  const up = (j) => {
+    while (true) {
+      const i = (j - 1) / 2 // parent
+      if (i === j || !(values[j].k < values[i].k)) {
+        break
+      }
+      [values[i], values[j]] = [values[j], values[i]]
+      j = i
+    }
+  }
+
+  /**
+   * @param {number} i
+   * @param {number} n
+   */
+  const down = (i, n) => {
+    while (true) {
+      const j1 = 2 * i + 1
+      if (j1 >= n || j1 < 0) { // j1 < 0 after int overflow
+        break
+      }
+      let j = j1 // left child
+      const j2 = j1 + 1
+      if (j2 < n && !(values[j1].k < values[j2].k)) {
+        j = j2 // = 2*i + 2  // right child
+      }
+      if (!(values[j].k < values[i].k)) {
+        break
+      }
+      [values[i], values[j]] = [values[j], values[i]]
+      i = j
+    }
+  }
+
+  return {
+    clear: () => {
+      values = []
+    },
+    /**
+     * @param {expDecaySample} s
+     */
+    push: (s) => {
+      const n = values.length
+      values[n] = s
+      up(n)
+    },
+    pop: () => {
+      const n = values.length - 1;
+      [values[0], values[n]] = [values[n], values[0]]
+      down(0, n)
+
+      return values.pop()
+    },
+    size: () => values.length,
+    values: () => [...values]
+  }
 }

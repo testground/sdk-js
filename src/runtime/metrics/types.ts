@@ -98,3 +98,8 @@ export interface Timer extends toMetric {
   updateSince: (d: Date) => void
   variance: () => number
 }
+
+export interface expDecaySample {
+  k: number
+  v: number
+}
