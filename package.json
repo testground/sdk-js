@@ -39,15 +39,15 @@
     "test:browser": "aegir test --target browser"
   },
   "dependencies": {
-    "emittery": "^0.8.1",
-    "ipaddr.js": "^2.0.0",
+    "emittery": "^0.10.0",
+    "ipaddr.js": "^2.0.1",
     "isomorphic-ws": "^4.0.1",
     "lodash.flatten": "^4.4.0",
     "winston": "^3.3.3",
-    "ws": "^7.4.4"
+    "ws": "^8.2.3"
   },
   "devDependencies": {
-    "@types/ws": "^7.4.1",
+    "@types/ws": "^8.2.0",
     "aegir": "^33.1.0"
   },
   "engines": {
