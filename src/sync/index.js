@@ -1,14 +1,18 @@
 'use strict'
 
-const { redisClient } = require('./redis')
+const { createSocket } = require('./socket')
 const { createState } = require('./state')
 const { createTopic } = require('./topic')
 const { createSugar } = require('./sugar')
+const { createPubSub } = require('./pubsub')
 
 /** @typedef {import('winston').Logger} Logger */
+/** @typedef {import('events').EventEmitter} EventEmitter */
 /** @typedef {import('../runtime').RunEnv} RunEnv */
 /** @typedef {import('../runtime').RunParams} RunParams */
 /** @typedef {import('./types').SyncClient} SyncClient */
+/** @typedef {import('./types').Request} Request */
+/** @typedef {import('./types').Response} Response */
 
 /**
  * Returns a new sync client that is bound to the provided runEnv. All the operations
@@ -28,19 +32,18 @@ function newBoundClient (runenv) {
  * @returns {Promise<SyncClient>}
  */
 async function newClient (logger, extractor) {
-  const redis = await redisClient(logger)
+  const socket = await createSocket(logger)
+  const pubsub = createPubSub(logger, socket)
 
   const base = {
-    ...createState(logger, extractor, redis),
-    ...createTopic(logger, extractor, redis)
+    ...createState(logger, extractor, pubsub, socket),
+    ...createTopic(logger, extractor, pubsub, socket)
   }
 
   return {
     ...base,
     ...createSugar(base),
-    close: () => {
-      redis.disconnect()
-    }
+    close: socket.close
   }
 }
 
