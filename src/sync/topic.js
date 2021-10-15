@@ -31,8 +31,8 @@ function createTopic (logger, extractor, pubsub, socket) {
 
       logger.debug('publishing item on topic', { topic, payload })
 
-      const json = JSON.stringify(payload)
-      logger.debug('serialized json payload', { topic, json })
+      // const json = JSON.stringify(payload)
+      // logger.debug('serialized json payload', { topic, json })
 
       const key = topicKey(topic, params)
       logger.debug('resolved key for publish', { topic, key })
