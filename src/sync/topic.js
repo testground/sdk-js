@@ -37,7 +37,7 @@ function createTopic (logger, extractor, pubsub, socket) {
       const key = topicKey(topic, params)
       logger.debug('resolved key for publish', { topic, key })
 
-      const seq = await pubsub.publish(key, json)
+      const seq = await pubsub.publish(key, payload)
       logger.debug('successfully published item; sequence number obtained', { topic, seq })
 
       return seq
