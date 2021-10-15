@@ -29,11 +29,23 @@ function createPubSub (logger, socket) {
       return res.publish.seq
     },
     subscribe: async (key) => {
-      return socket.request({
+      const { cancel, wait: waitSocket } = socket.request({
         subscribe: {
           topic: key
         }
       })
+
+      const wait = (async function * () {
+        for await (const res of waitSocket) {
+          if (res.error) {
+            throw new Error(res.error)
+          }
+
+          yield JSON.parse(res.subscribe)
+        }
+      })()
+
+      return { cancel, wait }
     }
   }
 }
