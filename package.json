@@ -2,6 +2,7 @@
   "name": "@testground/sdk",
   "version": "0.0.0",
   "description": "Testground SDK for JavaScript",
+  "platform": "node",
   "keywords": [
     "testground",
     "testing",
@@ -49,5 +50,13 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "aegir" : {
+    "test": {
+      "target": ["node"]
+    },
+    "build": {
+      "bundle": false
+    }
   }
 }
