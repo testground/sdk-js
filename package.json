@@ -1,6 +1,6 @@
 {
   "name": "@testground/sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Testground SDK for JavaScript",
   "platform": "node",
   "keywords": [
@@ -51,9 +51,11 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "aegir" : {
+  "aegir": {
     "test": {
-      "target": ["node"]
+      "target": [
+        "node"
+      ]
     },
     "build": {
       "bundle": false
@@ -61,5 +63,8 @@
     "release": {
       "docs": false
     }
-  }
+  },
+  "contributors": [
+    "Henrique Dias <hacdias@gmail.com>"
+  ]
 }
