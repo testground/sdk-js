@@ -16,9 +16,9 @@ This repository contains the JavaScript SDK for developing [Testground](https://
 $ npm install @testground/sdk
 ```
 
-## Usage
+<!-- ## Usage
 
-See [testground.github.io/sdk-js](https://testground.github.io/sdk-js).
+See [testground.github.io/sdk-js](https://testground.github.io/sdk-js). -->
 
 ## Issues
 
