@@ -38,7 +38,7 @@ function createSocket (logger) {
     }
 
     ws.onclose = function close () {
-      logger.info('connection to sync server closed')
+      logger.debug('connection to sync server closed')
     }
 
     ws.onmessage = function incoming (event) {
