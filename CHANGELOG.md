@@ -1,3 +1,12 @@
+## [0.1.1](https://github.com/testground/sdk-js/compare/v0.1.0...v0.1.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* connection closed should be debug ([c17ccd9](https://github.com/testground/sdk-js/commit/c17ccd9a79ec68bd4448a1759c76c0ae987a96d4))
+
+
+
 # 0.1.0 (2021-10-19)
 
 
