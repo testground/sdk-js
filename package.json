@@ -1,6 +1,6 @@
 {
   "name": "@testground/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Testground SDK for JavaScript",
   "platform": "node",
   "keywords": [
