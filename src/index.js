@@ -5,6 +5,7 @@ const sync = require('./sync')
 const network = require('./network')
 
 /** @typedef {import('./runtime').RunEnv} RunEnv */
+/** @typedef {import('./sync').SyncClient} SyncClient */
 
 /**
  * Takes a map of test case names and their functions, and calls the matched
@@ -34,16 +35,27 @@ async function invoke (fn) {
 
 /**
  * @param {RunEnv} runenv
- * @param {function(RunEnv):Promise<void>} fn
+ * @param {function(RunEnv, SyncClient?):Promise<void>} fn
  */
 async function invokeHelper (runenv, fn) {
-  runenv.recordStart()
+  let client = /** @type {SyncClient|null} */ (null)
+
+  if (fn.length >= 2) {
+    client = await sync.newBoundClient(runenv)
+    runenv.setSignalEmitter(client)
+  }
+
+  await runenv.recordStart()
 
   try {
-    await fn(runenv)
-    runenv.recordSuccess()
+    await fn(runenv, client)
+    await runenv.recordSuccess()
   } catch (err) {
-    runenv.recordFailure(err)
+    await runenv.recordFailure(err)
+  } finally {
+    if (client) {
+      client.close()
+    }
   }
 }
 
