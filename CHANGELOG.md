@@ -1,3 +1,12 @@
+## [0.1.2-rc.0](https://github.com/testground/sdk-js/compare/v0.1.1...v0.1.2-rc.0) (2022-04-18)
+
+
+### Features
+
+* add default client when requested by the test case ([#22](https://github.com/testground/sdk-js/issues/22)) ([b9b0fd1](https://github.com/testground/sdk-js/commit/b9b0fd180de106c480c441c096e4826e446520d5))
+
+
+
 ## [0.1.1](https://github.com/testground/sdk-js/compare/v0.1.0...v0.1.1) (2021-10-20)
 
 
