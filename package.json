@@ -1,6 +1,6 @@
 {
   "name": "@testground/sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Testground SDK for JavaScript",
   "platform": "node",
   "keywords": [
@@ -65,6 +65,7 @@
     }
   },
   "contributors": [
-    "Henrique Dias <hacdias@gmail.com>"
+    "Henrique Dias <hacdias@gmail.com>",
+    "Laurent Senta <Laurent.Senta@gmail.com>"
   ]
 }
