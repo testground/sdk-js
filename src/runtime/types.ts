@@ -10,6 +10,7 @@ export interface RunParams {
   testInstanceParams: Record<string, string>
   testInstanceRole: string
   testOutputsPath: string
+  testFromBrowser: boolean
   testPlan: string
   testRepo: string
   testRun: string

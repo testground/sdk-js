@@ -20,14 +20,20 @@ function getLogger (params) {
 
   const transports = [
     new winston.transports.Console({ format }),
-    new winston.transports.File({ filename: 'stdout', format })
   ]
 
-  if (params.testOutputsPath) {
+  if (!params.testFromBrowser) {
     transports.push(new winston.transports.File({
       format,
-      filename: path.join(params.testOutputsPath, 'run.out')
+      filename: 'stdout'
     }))
+
+    if (!params.testOutputsPath) {
+      transports.push(new winston.transports.File({
+        format,
+        filename: path.join(params.testOutputsPath, 'run.out')
+      }))
+    }
   }
 
   return winston.createLogger({
