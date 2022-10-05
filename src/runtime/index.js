@@ -52,6 +52,5 @@ function newRunEnv (params) {
 module.exports = {
   newRunEnv,
   currentRunEnv,
-  parseRunEnv,
-  parseRunParams
+  parseRunEnv
 }
