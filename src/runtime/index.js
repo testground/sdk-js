@@ -14,7 +14,11 @@ const { parseRunParams } = require('./params')
  * @returns {RunEnv}
  */
 function currentRunEnv () {
-  return parseRunEnv(process.env)
+  if (process.name === 'browser') {
+    return parseRunEnv(window.testground.env)
+  } else {
+    return parseRunEnv(process.env)
+  }
 }
 
 /**

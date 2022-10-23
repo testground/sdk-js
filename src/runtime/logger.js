@@ -22,7 +22,7 @@ function getLogger (params) {
     new winston.transports.Console({ format }),
   ]
 
-  if (!params.testFromBrowser) {
+  if (process.name !== 'browser') {
     transports.push(new winston.transports.File({
       format,
       filename: 'stdout'
