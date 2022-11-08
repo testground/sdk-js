@@ -53,8 +53,8 @@
   },
   "browser": {
     "os": "./shims/std/os.js",
-    "./src/runtime/env.js": "./shims/src/runtime/env.js",
-    "./src/runtime/logger.js": "./shims/src/runtime/logger.js"
+    "./src/runtime/env": "./shims/src/runtime/env.js",
+    "./src/runtime/logger": "./shims/src/runtime/logger.js"
   },
   "aegir": {
     "test": {
