@@ -1,9 +1,16 @@
+'use strict'
+
 /**
  * Gets the environment that can be used by the environment
  * to create the runtime.
  *
  * @returns {Record<string, string|undefined>}
  */
- export function getCurrentEnv() {
-    return window.testground.env
+function getCurrentEnv () {
+  // @ts-ignore
+  return window.testground.env
+}
+
+module.exports = {
+  getCurrentEnv
 }

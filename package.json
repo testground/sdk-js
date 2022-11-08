@@ -52,9 +52,9 @@
     "node": ">=14.0.0"
   },
   "browser": {
-    "os": "./shims/std/os.js",
-    "./src/runtime/env": "./shims/src/runtime/env.js",
-    "./src/runtime/logger": "./shims/src/runtime/logger.js"
+    "os": "./src/shims/os.js",
+    "./src/runtime/env": "./src/shims/runtime/env.js",
+    "./src/runtime/logger": "./src/shims/runtime/logger.js"
   },
   "aegir": {
     "test": {
