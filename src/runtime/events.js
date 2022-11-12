@@ -47,7 +47,6 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
-      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordSuccess: () => {
       const event = {
@@ -58,7 +57,6 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
-      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordFailure: (err) => {
       const event = {
@@ -70,7 +68,6 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
-      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordCrash: (err) => {
       const event = {
@@ -83,7 +80,6 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
-      // TODO(metrics): re.metrics.recordEvent(&evt)
     }
   }
 }
