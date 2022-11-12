@@ -6,11 +6,11 @@
  *
  * @returns {Record<string, string|undefined>}
  */
-function getCurrentEnv () {
+function getProcessEnv () {
   // @ts-ignore
   return window.testground.env
 }
 
 module.exports = {
-  getCurrentEnv
+  getProcessEnv
 }

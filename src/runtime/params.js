@@ -2,6 +2,8 @@
 
 const ipaddr = require('ipaddr.js')
 
+const { getProcessEnv } = require('./env')
+
 /** @typedef {import('./types').RunParams} RunParams */
 
 const ENV_TEST_BRANCH = 'TEST_BRANCH'
@@ -19,6 +21,40 @@ const ENV_TEST_SIDECAR = 'TEST_SIDECAR'
 const ENV_TEST_START_TIME = 'TEST_START_TIME'
 const ENV_TEST_SUBNET = 'TEST_SUBNET'
 const ENV_TEST_TAG = 'TEST_TAG'
+
+const ENV_TEST_PARAMETERS = [
+  ENV_TEST_BRANCH,
+  ENV_TEST_CASE,
+  ENV_TEST_GROUP_ID,
+  ENV_TEST_GROUP_INSTANCE_COUNT,
+  ENV_TEST_INSTANCE_COUNT,
+  ENV_TEST_INSTANCE_PARAMS,
+  ENV_TEST_INSTANCE_ROLE,
+  ENV_TEST_OUTPUTS_PATH,
+  ENV_TEST_PLAN,
+  ENV_TEST_REPO,
+  ENV_TEST_RUN,
+  ENV_TEST_SIDECAR,
+  ENV_TEST_START_TIME,
+  ENV_TEST_SUBNET,
+  ENV_TEST_TAG
+]
+
+/**
+ * Gets the parameters from the environment
+ * that can be used by the environment to create the runtime.
+ *
+ * @returns {Record<string, string|undefined>}
+ */
+function getEnvParameters () {
+  const env = getProcessEnv()
+  return Object.keys(env)
+    .filter(key => ENV_TEST_PARAMETERS.includes(key))
+    .reduce((/** @type {Record<string, string|undefined>} */params, key) => {
+      params[key] = env[key]
+      return params
+    }, {})
+}
 
 /**
  * @param {Record<string, string|undefined>} env
@@ -95,5 +131,6 @@ function unpackParams (packed) {
 }
 
 module.exports = {
+  getEnvParameters,
   parseRunParams
 }

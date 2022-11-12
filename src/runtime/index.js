@@ -2,8 +2,7 @@
 
 const { getLogger } = require('./logger')
 const { newEvents } = require('./events')
-const { parseRunParams } = require('./params')
-const { getCurrentEnv } = require('./env')
+const { getEnvParameters, parseRunParams } = require('./params')
 
 /** @typedef {import('./types').RunParams} RunParams */
 /** @typedef {import('./types').SignalEmitter} SignalEmitter */
@@ -15,7 +14,7 @@ const { getCurrentEnv } = require('./env')
  * @returns {RunEnv}
  */
 function currentRunEnv () {
-  const env = getCurrentEnv()
+  const env = getEnvParameters()
   return parseRunEnv(env)
 }
 

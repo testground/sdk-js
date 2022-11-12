@@ -6,10 +6,10 @@
  *
  * @returns {Record<string, string|undefined>}
  */
-function getCurrentEnv () {
+function getProcessEnv () {
   return process.env
 }
 
 module.exports = {
-  getCurrentEnv
+  getProcessEnv
 }
