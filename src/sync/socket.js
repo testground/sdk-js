@@ -3,8 +3,13 @@
 const Emittery = require('emittery')
 const WebSocket = require('isomorphic-ws')
 
-const ENV_SYNC_SERVICE_HOST = 'SYNC_SERVICE_HOST'
-const ENV_SYNC_SERVICE_PORT = 'SYNC_SERVICE_PORT'
+const {
+  ENV_SYNC_SERVICE_HOST,
+  ENV_SYNC_SERVICE_PORT
+} = require('../env/sync')
+const {
+  getEnvParameters
+} = require('../env')
 
 /** @typedef {import('winston').Logger} Logger */
 /** @typedef {import('events').EventEmitter} EventEmitter */
@@ -97,8 +102,10 @@ function createSocket (logger) {
 }
 
 function socketAddress () {
-  let host = process.env[ENV_SYNC_SERVICE_HOST]
-  let port = process.env[ENV_SYNC_SERVICE_PORT]
+  const env = getEnvParameters()
+
+  let host = env[ENV_SYNC_SERVICE_HOST]
+  let port = env[ENV_SYNC_SERVICE_PORT]
 
   if (!port) {
     port = '5050'

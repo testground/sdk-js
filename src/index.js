@@ -3,7 +3,9 @@
 const runtime = require('./runtime')
 const sync = require('./sync')
 const network = require('./network')
-const { registerTestcaseResult } = require('./runtime/env')
+const env = require('./env')
+
+const { registerTestcaseResult } = require('./env/env')
 
 /** @typedef {import('./runtime').RunEnv} RunEnv */
 /** @typedef {import('./sync').SyncClient} SyncClient */
@@ -35,7 +37,7 @@ async function invokeMap (cases) {
  * @param {unknown} result
  * @param {RunEnv} runenv
  */
-function registerAndMessageTestcaseResult(result, runenv) {
+function registerAndMessageTestcaseResult (result, runenv) {
   runenv.recordMessage(`registerTestcaseResult: ${result}`)
   registerTestcaseResult(result)
 }
@@ -83,6 +85,7 @@ module.exports = {
   invoke,
   invokeMap,
 
+  env,
   network,
   runtime,
   sync
