@@ -10,6 +10,15 @@ function getProcessEnv () {
   return process.env
 }
 
+/**
+ * @param {unknown} _result
+ */
+function registerTestcaseResult (_result) {
+  // function is used in the browser shim
+  // to gain the ability to wait until invokeMap is finished
+}
+
 module.exports = {
-  getProcessEnv
+  getProcessEnv,
+  registerTestcaseResult
 }

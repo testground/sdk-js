@@ -8,9 +8,22 @@
  */
 function getProcessEnv () {
   // @ts-ignore
-  return window.testground.env
+  return (window.testground || {}).env
+}
+/**
+ * @param {unknown} result
+ */
+function registerTestcaseResult (result) {
+  // @ts-ignore
+  if (!window.testground) {
+    // @ts-ignore
+    window.testground = {}
+  }
+  // @ts-ignore
+  window.testground.result = result
 }
 
 module.exports = {
-  getProcessEnv
+  getProcessEnv,
+  registerTestcaseResult
 }
