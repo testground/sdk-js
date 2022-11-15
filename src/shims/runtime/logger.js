@@ -41,59 +41,7 @@ function getLogger () {
      * @param {any[]} args
      */
     log (fn, ...args) {
-      // Optimize the hot-path which is the single object.
-      if (args.length === 1) {
-        const [msg] = args
-        const info = (msg && msg.message && msg) || { message: msg }
-        this._write(fn, info)
-        return this
-      }
-
-      // When provided nothing assume the empty string
-      if (args.length === 0) {
-        this._log(fn, '')
-        return this
-      }
-
-      // Otherwise build argument list
-      return this._log(fn, args[0], ...args.slice(1))
-    },
-
-    /**
-     * @param {CallableFunction} fn
-     * @param {any} msg
-     * @param {any[]} splat
-     */
-    _log (fn, msg, ...splat) {
-      // eslint-disable-line max-params
-      // Optimize for the hotpath of logging JSON literals
-      if (arguments.length === 1) {
-        this._write(fn, '')
-        return this
-      }
-
-      // Slightly less hotpath, but worth optimizing for.
-      if (arguments.length === 2) {
-        if (msg && typeof msg === 'object') {
-          this._write(fn, msg)
-          return this
-        }
-
-        this._write(fn, { message: msg })
-        return this
-      }
-
-      this._write(fn, { message: msg, splat })
-      return this
-    },
-
-    /**
-     * @param {CallableFunction} fn
-     * @param {any} msg
-     */
-    _write (fn, msg) {
-      const s = JSON.stringify(msg)
-      fn(s)
+      fn(JSON.stringify(args))
     }
   }
 }
