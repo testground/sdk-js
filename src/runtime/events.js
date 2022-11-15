@@ -47,6 +47,8 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
+      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordSuccess: () => {
       const event = {
@@ -57,6 +59,8 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
+      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordFailure: (err) => {
       const event = {
@@ -68,6 +72,8 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
+      // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordCrash: (err) => {
       const event = {
@@ -80,6 +86,8 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
+      // TODO(metrics): re.metrics.recordEvent(&evt)
     }
   }
 }
