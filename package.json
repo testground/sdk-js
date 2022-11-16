@@ -51,6 +51,11 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "browser": {
+    "os": "./src/shims/os.js",
+    "./src/env/env": "./src/shims/env/env.js",
+    "./src/runtime/logger": "./src/shims/runtime/logger.js"
+  },
   "aegir": {
     "test": {
       "target": [
@@ -66,6 +71,7 @@
   },
   "contributors": [
     "Henrique Dias <hacdias@gmail.com>",
-    "Laurent Senta <Laurent.Senta@gmail.com>"
+    "Laurent Senta <Laurent.Senta@gmail.com>",
+    "Glen De Cauwsemaecker <glen@littlebearlabs.io>"
   ]
 }

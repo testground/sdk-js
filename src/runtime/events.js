@@ -47,6 +47,7 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
       // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordSuccess: () => {
@@ -58,6 +59,7 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
       // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordFailure: (err) => {
@@ -70,6 +72,7 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
       // TODO(metrics): re.metrics.recordEvent(&evt)
     },
     recordCrash: (err) => {
@@ -83,6 +86,7 @@ function newEvents (runParams, logger, getSignalEmitter) {
 
       logger.info('', { event })
       return emitEvent(event)
+      // eslint-disable-next-line no-warning-comments
       // TODO(metrics): re.metrics.recordEvent(&evt)
     }
   }

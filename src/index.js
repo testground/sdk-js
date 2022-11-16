@@ -3,6 +3,9 @@
 const runtime = require('./runtime')
 const sync = require('./sync')
 const network = require('./network')
+const env = require('./env')
+
+const { registerTestcaseResult } = require('./env/env')
 
 /** @typedef {import('./runtime').RunEnv} RunEnv */
 /** @typedef {import('./sync').SyncClient} SyncClient */
@@ -17,10 +20,26 @@ async function invokeMap (cases) {
   const runenv = runtime.currentRunEnv()
 
   if (cases[runenv.testCase]) {
-    await invokeHelper(runenv, cases[runenv.testCase])
+    try {
+      await invokeHelper(runenv, cases[runenv.testCase])
+    } catch (err) {
+      registerAndMessageTestcaseResult(err, runenv)
+      throw err
+    }
   } else {
-    throw new Error(`unrecognized test case: ${runenv.testCase}`)
+    const err = new Error(`unrecognized test case: ${runenv.testCase}`)
+    registerAndMessageTestcaseResult(err, runenv)
+    throw err
   }
+}
+
+/**
+ * @param {unknown} result
+ * @param {RunEnv} runenv
+ */
+function registerAndMessageTestcaseResult (result, runenv) {
+  runenv.recordMessage(`registerTestcaseResult: ${result}`)
+  registerTestcaseResult(result)
 }
 
 /**
@@ -47,15 +66,18 @@ async function invokeHelper (runenv, fn) {
 
   await runenv.recordStart()
 
+  let /** @type {unknown} */ testResult = true
   try {
     await fn(runenv, client)
     await runenv.recordSuccess()
   } catch (err) {
     await runenv.recordFailure(err)
+    testResult = err
   } finally {
     if (client) {
       client.close()
     }
+    registerAndMessageTestcaseResult(testResult, runenv)
   }
 }
 
@@ -63,6 +85,7 @@ module.exports = {
   invoke,
   invokeMap,
 
+  env,
   network,
   runtime,
   sync
