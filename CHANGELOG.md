@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/testground/sdk-js/compare/v0.1.2...v0.1.3) (2022-12-07)
+
+
+### Features
+
+* add basic browser support  ([#26](https://github.com/testground/sdk-js/issues/26)) ([4401d1d](https://github.com/testground/sdk-js/commit/4401d1d478d3a12c8b5fc36799a51651f5fdba52)), closes [#25](https://github.com/testground/sdk-js/issues/25)
+
+
+
 ## [0.1.2](https://github.com/testground/sdk-js/compare/v0.1.1...v0.1.2) (2022-04-18)
 
 
