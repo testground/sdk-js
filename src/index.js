@@ -34,11 +34,10 @@ async function invokeMap (cases) {
 }
 
 /**
- * @param {unknown} result
+ * @param {any} result
  * @param {RunEnv} runenv
  */
 function registerAndMessageTestcaseResult (result, runenv) {
-  // @ts-ignore
   if ('stack' in result) {
     runenv.recordMessage(`registerTestcaseResult: ${result}; ${result.stack}`)
   } else {
