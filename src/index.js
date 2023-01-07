@@ -34,11 +34,15 @@ async function invokeMap (cases) {
 }
 
 /**
- * @param {unknown} result
+ * @param {any} result
  * @param {RunEnv} runenv
  */
 function registerAndMessageTestcaseResult (result, runenv) {
-  runenv.recordMessage(`registerTestcaseResult: ${result}`)
+  if (result && result.stack) {
+    runenv.recordMessage(`registerTestcaseResult: ${result}; ${result.stack}`)
+  } else {
+    runenv.recordMessage(`registerTestcaseResult: ${result}`)
+  }
   registerTestcaseResult(result)
 }
 
