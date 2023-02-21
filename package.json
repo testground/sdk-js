@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/ws": "^8.2.0",
-    "aegir": "^35.1.1"
+    "aegir": "^38.1.6"
   },
   "engines": {
     "node": ">=14.0.0"
